@@ -1,0 +1,208 @@
+﻿<Page
+    x:Class="AAT.Pages.Editor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:AAT.Pages"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="page"
+    Title="Editor"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource MahApps.Brushes.Gray10}"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="FloatTemplate">
+            <mah:NumericUpDown
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Interval="0.1"
+                NumericInputMode="All"
+                ParsingNumberStyle="AllowDecimalPoint"
+                StringFormat="N3"
+                TextAlignment="Center"
+                Value="{Binding Value}" />
+        </DataTemplate>
+        <DataTemplate x:Key="TextTemplate">
+            <TextBox
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Text="{Binding Value}" />
+        </DataTemplate>
+        <DataTemplate x:Key="EventPicker">
+            <ComboBox
+                x:Name="EventPicker"
+                Grid.Row="1"
+                Grid.Column="2"
+                MaxHeight="100"
+                Margin="10,4,5,10"
+                HorizontalContentAlignment="Center"
+                mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
+                mah:TextBoxHelper.Watermark="None"
+                mah:TextBoxHelper.WatermarkAlignment="Center"
+                mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
+                IsEditable="True"
+                ItemsSource="{Binding properties, ElementName=page}"
+                TouchDown="BaseEvent_TouchDown" />
+        </DataTemplate>
+        <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="32*" />
+            <ColumnDefinition Width="60*" />
+            <ColumnDefinition Width="45*" />
+            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="16*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="62*" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+
+        <ComboBox
+            x:Name="SoundeventName"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            MaxHeight="100"
+            Margin="10,4,10,10"
+            HorizontalContentAlignment="Center"
+            mah:TextBoxHelper.Watermark="Soundevent Name"
+            mah:TextBoxHelper.WatermarkAlignment="Center"
+            IsEditable="True"
+            SelectionChanged="SoundeventName_Selected"
+            TouchDown="SoundEvenName_TouchDown" />
+        <ComboBox
+            x:Name="BaseSoundeventName"
+            Grid.Row="1"
+            Grid.Column="2"
+            MaxHeight="100"
+            Margin="10,4,5,10"
+            HorizontalContentAlignment="Center"
+            mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
+            mah:TextBoxHelper.Watermark="None"
+            mah:TextBoxHelper.WatermarkAlignment="Center"
+            mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
+            IsEditable="True"
+            TouchDown="BaseEvent_TouchDown" />
+        <Button
+            Grid.RowSpan="2"
+            Grid.Column="4"
+            Margin="5,10"
+            Click="Button_Click">
+            <IconPack:BootstrapIcons Kind="Plus" />
+        </Button>
+        <Label
+            Grid.Column="2"
+            Width="72"
+            Height="26"
+            Margin="10,18,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Base Event :" />
+        <Label
+            Width="114"
+            Height="26"
+            Margin="10,18,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Soundevent Name :" />
+        <mah:DropDownButton
+            x:Name="BaseEventSelectionOptions"
+            Grid.Row="1"
+            Grid.Column="3"
+            MinWidth="26"
+            Margin="2,4,2,10"
+            Padding="0"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            ArrowVisibility="Collapsed"
+            Grid.IsSharedSizeScope="True"
+            RenderTransformOrigin="0.5,0.5"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            UseLayoutRounding="False">
+            <mah:DropDownButton.Items>
+                <mah:ToggleSwitch x:Name="onlyBase" Header="Only BaseEvents" />
+                <mah:ToggleSwitch x:Name="onlyAddon" Header="Only AddonEvents" />
+            </mah:DropDownButton.Items>
+            <mah:DropDownButton.Content>
+                <IconPack:BootstrapIcons Kind="GearFill" />
+            </mah:DropDownButton.Content>
+        </mah:DropDownButton>
+        <DataGrid
+            x:Name="soundeventEditorView"
+            Grid.Row="2"
+            Grid.ColumnSpan="5"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            mah:DataGridHelper.EnableCellEditAssist="True"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+            EnableColumnVirtualization="True"
+            GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*" Header="Type">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                DisplayMemberPath="Key"
+                                IsEditable="True"
+                                ItemsSource="{Binding TypeDictionary}"
+                                SelectionChanged="TypeSelectionChanged"
+                                Text="{Binding TypeName}" />
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding ValueTypes, ElementName=page}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellTemplateSelector="{StaticResource BasedOnValue}"
+                    Header="Value" />
+                <DataGridTemplateColumn Width="100" Header="Delete Type">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="Button_Click_1" Content="{IconPack:BootstrapIcons Kind=X}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <ComboBox
+            x:Name="ComboBoxAddItem"
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="10"
+            IsEditable="True"
+            KeyUp="ComboBoxAddItem_KeyDown"
+            SelectionChanged="ComboBoxAddItem_SelectionChanged"
+            Text="{Binding TypeName}" />
+        <Label
+            Grid.Row="3"
+            Width="140"
+            Height="30"
+            Margin="10,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Add New Type: " />
+
+    </Grid>
+</Page>

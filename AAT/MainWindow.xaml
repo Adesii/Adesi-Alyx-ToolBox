@@ -1,0 +1,92 @@
+﻿<mah:MetroWindow
+    x:Class="AAT.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:IconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:AAT"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Adesi's Alyx Toolbox"
+    MinWidth="800"
+    MinHeight="450"
+    Background="{DynamicResource MahApps.Brushes.MenuItem.Background}"
+    Foreground="{DynamicResource MahApps.Brushes.Flyout.Foreground}"
+    GlowBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
+    IsManipulationEnabled="True"
+    ResizeMode="CanResizeWithGrip"
+    WindowStartupLocation="CenterScreen"
+    WindowTitleBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
+    mc:Ignorable="d">
+    <mah:MetroWindow.Resources>
+        <System:Double x:Key="IconSize">20</System:Double>
+        <System:Double x:Key="IconWidth">40</System:Double>
+    </mah:MetroWindow.Resources>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button
+                x:Name="EditorMenu"
+                Click="EditorMenu_Click"
+                ToolTip="Open the Soundevent Editor">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <IconPack:BootstrapIcons
+                                Width="{StaticResource IconWidth}"
+                                Height="{StaticResource IconSize}"
+                                Kind="Soundwave" />
+                            <TextBlock Text="Sound Event Editor" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button
+                x:Name="SettingsMenu"
+                Grid.Row="1"
+                Click="SettingsMenu_Click"
+                ToolTip="Open Settings">
+                <IconPack:BootstrapIcons
+                    Width="{StaticResource IconSize}"
+                    Height="{StaticResource IconSize}"
+                    Kind="Gear" />
+            </Button>
+
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="LaunchGitHubSite" ToolTip="Open up the GitHub site">
+                <IconPack:PackIconModern
+                    Width="22"
+                    Height="22"
+                    Kind="SocialGithubOctocat" />
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <mah:TransitioningContentControl x:Name="transitionThing">
+            <Frame
+                x:Name="MainFrame"
+                Margin="10,0"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Background="{DynamicResource MahApps.Brushes.Menu.Background}"
+                Navigating="MainFrame_Navigating"
+                NavigationUIVisibility="Hidden" />
+        </mah:TransitioningContentControl>
+
+
+
+
+    </Grid>
+</mah:MetroWindow>
+
+
+
