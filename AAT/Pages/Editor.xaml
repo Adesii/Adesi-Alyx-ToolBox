@@ -203,6 +203,16 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Add New Type: " />
+        <ComboBox
+            x:Name="AddonSelectionBox"
+            Grid.Column="1"
+            Width="175"
+            Height="26"
+            Margin="115,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IsSynchronizedWithCurrentItem="True"
+            Loaded="AddonSelectionBox_Initialized" />
 
     </Grid>
 </Page>

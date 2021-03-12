@@ -58,5 +58,17 @@ namespace AAT.Properties {
                 this["AutoCompile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public string LastSelectedAddon {
+            get {
+                return ((string)(this["LastSelectedAddon"]));
+            }
+            set {
+                this["LastSelectedAddon"] = value;
+            }
+        }
     }
 }

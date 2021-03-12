@@ -11,5 +11,8 @@
     <Setting Name="AutoCompile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="LastSelectedAddon" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

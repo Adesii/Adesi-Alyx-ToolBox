@@ -1,24 +1,16 @@
 ﻿using AAT.Classes;
+using AAT.Classes.Addons;
 using AAT.Classes.SoundEventPropertyClasses;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Linq;
+using System.Windows.Data;
 
 namespace AAT.Pages
 {
@@ -30,10 +22,14 @@ namespace AAT.Pages
         public static Editor Instance = new Editor();
         SoundeventBuilder builder;
         ErrorCodes code = ErrorCodes.OK;
+
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
 
+        public ObservableCollection<string> ValueTypes { get => vt; }
         private ObservableCollection<string> vt = new ObservableCollection<string>();
-        public ObservableCollection<string> ValueTypes{ get => vt; }
+        public ObservableCollection<Addon> Addons { get => addons;}
+        private ObservableCollection<Addon> addons = new ObservableCollection<Addon>();
+
 
         public Editor()
         {
@@ -56,7 +52,16 @@ namespace AAT.Pages
                 "Eventpicker",
                 "Comment"
             };
+            addons = new ObservableCollection<Addon>(AddonManager.GetAddons());
+            if(Properties.Settings.Default.LastSelectedAddon == "None")
+            {
+                AddonSelectionBox.SelectedIndex = 0;
+            }
+            else
+            {
+                AddonSelectionBox.SelectedIndex = addons.IndexOf(addons.Where((e) => { return e.AddonName == Properties.Settings.Default.LastSelectedAddon; }).First());
 
+            }
         }
 
         private void OnlyAddon_Toggled(object sender, RoutedEventArgs e)
@@ -195,6 +200,11 @@ namespace AAT.Pages
         {
             ComboBox b = (ComboBox)sender;
             Debug.Print(b.Text);
+        }
+
+        private void AddonSelectionBox_Initialized(object sender, EventArgs e)
+        {
+            AddonSelectionBox.ItemsSource = Addons;
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector

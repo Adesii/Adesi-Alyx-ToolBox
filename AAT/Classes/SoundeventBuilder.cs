@@ -1,4 +1,5 @@
-﻿using AAT.Classes.SoundEventPropertyClasses;
+﻿using AAT.Classes.Addons;
+using AAT.Classes.SoundEventPropertyClasses;
 using AAT.Pages;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,6 @@ namespace AAT.Classes
 
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
 
-        public string CurrentAddon = "CustomGame";
 
         private Dictionary<options, bool> lastButtonState = new Dictionary<options, bool>();
         enum options
@@ -73,7 +73,7 @@ namespace AAT.Classes
             if (state)
             {
                 filtered = GetAllSounds();
-                IEnumerable<Soundevent> query = filtered.Where((a) => a.Addon == CurrentAddon);
+                IEnumerable<Soundevent> query = filtered.Where((a) => a.Addon == AddonManager.CurrentAddon);
                 filtered.Clear();
                 foreach (var item in query)
                 {
@@ -140,13 +140,13 @@ namespace AAT.Classes
             }
             if (basevent != null)
             {
-                se = new Soundevent(name, basevent, CurrentAddon);
+                se = new Soundevent(name, basevent, AddonManager.CurrentAddon);
                 se.AddProperty(new SoundeventProperty("base", EventDisplays.SoundeventPicker));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }
             else
             {
-                se = new Soundevent(name, Addon: CurrentAddon);
+                se = new Soundevent(name, Addon: AddonManager.CurrentAddon);
                 se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.TypePicker));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }

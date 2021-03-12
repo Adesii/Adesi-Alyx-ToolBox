@@ -127,7 +127,7 @@ namespace AAT.Pages
             foreach (var item in paths)
             {
                 if (Directory.Exists(item + "\\steamapps\\common\\Half-Life Alyx\\game\\hlvr"))
-                return item.Replace("\\","/",System.StringComparison.Ordinal)+ "/steamapps/common/Half-Life Alyx";
+                return item.Replace("\\\\","/",System.StringComparison.Ordinal)+ "/steamapps/common/Half-Life Alyx";
             }
 
             return null;
