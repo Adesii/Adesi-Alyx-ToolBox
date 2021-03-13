@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace AAT.Classes.Addons
+namespace AAT.Addons
 {
     public static class AddonManager
     {

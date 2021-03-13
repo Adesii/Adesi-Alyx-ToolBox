@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AAT.Classes.SoundEventPropertyClasses
+namespace AAT.Soundevents
 {
-    class Soundevent
+    public class Soundevent
     {
         List<SoundeventProperty> properties = new List<SoundeventProperty>();
 

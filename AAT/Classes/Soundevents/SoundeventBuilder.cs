@@ -1,5 +1,4 @@
-﻿using AAT.Classes.Addons;
-using AAT.Classes.SoundEventPropertyClasses;
+﻿using AAT.Addons;
 using AAT.Pages;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AAT.Classes
+namespace AAT.Soundevents
 {
     public enum ErrorCodes
     {

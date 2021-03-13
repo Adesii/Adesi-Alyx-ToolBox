@@ -32,7 +32,7 @@ namespace AAT.Pages
             else
                 ThemeSelector.Content = "Light";
 
-            Path.Text = GetInstallPath();
+            Path.Text = Addons.AddonFolderWatcher.GetInstallPath();
             AutoCompile.IsChecked = Properties.Settings.Default.AutoCompile;
             string markdown = Properties.Resources.aboutText;
             //var xaml = Markdown.ToFlowDocument(markdown);
@@ -93,44 +93,6 @@ namespace AAT.Pages
 
             }
             */
-        }
-        private string GetInstallPath() 
-        {
-            var c = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam", "InstallPath", null);
-            if (c == null) return Properties.Settings.Default.InstallPath;
-            var path = GetAlyxPath(c.ToString());
-            Properties.Settings.Default.InstallPath = path;
-            return path;
-        }
-
-        private string GetAlyxPath(string SteamPath)
-        {
-            List<string> paths = new List<string>();
-            if (Directory.Exists(SteamPath))
-            {
-                paths.Add(SteamPath);
-                if (File.Exists(SteamPath + "\\steamapps\\libraryfolders.vdf"))
-                {
-                    var allLibraries=File.ReadAllText(SteamPath + "\\steamapps\\libraryfolders.vdf");
-                    var kv = KVSerializer.Create(KVSerializationFormat.KeyValues1Text);
-                    var kvalues =kv.Deserialize(File.OpenRead(SteamPath + "\\steamapps\\libraryfolders.vdf"));
-
-                    foreach (var item in kvalues)
-                    {
-                        if (!int.TryParse(item.Name, out int num)) continue;
-                        Debug.Print("--------Item---------");
-                        Debug.Print(item.Name);
-                        paths.Add(item.Value.ToString());
-                    }
-                }
-            }
-            foreach (var item in paths)
-            {
-                if (Directory.Exists(item + "\\steamapps\\common\\Half-Life Alyx\\game\\hlvr"))
-                return item.Replace("\\\\","/",System.StringComparison.Ordinal)+ "/steamapps/common/Half-Life Alyx";
-            }
-
-            return null;
         }
         private void AutoCompile_Click(object sender, RoutedEventArgs e)
         {

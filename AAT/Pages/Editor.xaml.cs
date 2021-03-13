@@ -1,6 +1,5 @@
-﻿using AAT.Classes;
-using AAT.Classes.Addons;
-using AAT.Classes.SoundEventPropertyClasses;
+﻿using AAT.Addons;
+using AAT.Soundevents;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;

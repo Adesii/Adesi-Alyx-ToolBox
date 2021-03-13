@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AAT.Classes.SoundEventPropertyClasses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ValveKeyValue;
@@ -15,7 +14,7 @@ using ValveResourceFormat.Serialization.KeyValues;
 using ValveResourceFormat.ResourceTypes;
 using KVObject = ValveResourceFormat.Serialization.KeyValues.KVObject;
 
-namespace AAT.Classes
+namespace AAT.Soundevents
 {
     class alyxJsonParser
     {

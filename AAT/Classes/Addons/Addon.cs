@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AAT.Soundevents;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace AAT.Classes.Addons
+namespace AAT.Addons
 {
     public class Addon
     {
@@ -12,6 +13,8 @@ namespace AAT.Classes.Addons
         public bool OnlySoundeventsFolder;
 
         public string Path = "/";
+
+        public List<SoundeventFile> AddonSpecificAddonFiles; 
 
         public Addon(string path, bool onlySoundeventsFolder = false)
         {

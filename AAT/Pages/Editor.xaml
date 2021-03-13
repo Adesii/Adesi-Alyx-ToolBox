@@ -73,6 +73,7 @@
             x:Name="SoundeventName"
             Grid.Row="1"
             Grid.ColumnSpan="2"
+            Width="Auto"
             MaxHeight="100"
             Margin="10,4,10,10"
             HorizontalContentAlignment="Center"
@@ -206,11 +207,7 @@
         <ComboBox
             x:Name="AddonSelectionBox"
             Grid.Column="1"
-            Width="175"
-            Height="26"
-            Margin="115,0,0,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            Margin="116,10,10,9"
             IsSynchronizedWithCurrentItem="True"
             Loaded="AddonSelectionBox_Initialized" />
 
