@@ -54,7 +54,7 @@ namespace AAT.Pages
                 "Eventpicker",
                 "Comment"
             };
-            addons = new ObservableCollection<Addon>(AddonManager.GetAddons());
+            addons = new ObservableCollection<Addon>(AddonManager.GetAddons(true));
             if(Properties.Settings.Default.LastSelectedAddon == "None")
             {
                 AddonSelectionBox.SelectedIndex = 0;
@@ -216,6 +216,11 @@ namespace AAT.Pages
         private void ComboBoxAddItem_Loaded(object sender,EventArgs e)
         {
             ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.typeDictionary;
+        }
+
+        private void AddonSelectionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddonManager.ChangeAddon(addons[AddonSelectionBox.SelectedIndex]);
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector

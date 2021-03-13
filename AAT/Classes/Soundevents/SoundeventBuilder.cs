@@ -32,13 +32,21 @@ namespace AAT.Soundevents
     class SoundeventBuilder
     {
 
-
-        public static SoundeventBuilder Instance = new SoundeventBuilder();
+        private static SoundeventBuilder m_instance;
+        public static SoundeventBuilder Instance
+        {
+            get
+            {
+                if (m_instance == null)
+                    m_instance = new SoundeventBuilder();
+                return m_instance;
+            }
+            set { m_instance = value; }
+        }
 
         public ObservableCollection<Soundevent> AllSoundEvents = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> filtered = new ObservableCollection<Soundevent>();
-        public ObservableCollection<Soundevent> AddonBasedEvents = new ObservableCollection<Soundevent>();
-
+        public ObservableCollection<Soundevent> AddonBasedEvents { get => AddonManager.CurrentAddon.AllSoundevents; }
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
 
 
@@ -105,7 +113,7 @@ namespace AAT.Soundevents
             }
             else
             {
-                if(noFilters()) Pages.Editor.Instance.BaseSoundeventName.ItemsSource = GetAllSounds();
+                if (noFilters()) Pages.Editor.Instance.BaseSoundeventName.ItemsSource = GetAllSounds();
             }
         }
         private bool noFilters()
@@ -142,19 +150,16 @@ namespace AAT.Soundevents
             }
             if (basevent != null)
             {
-                se = new Soundevent(name, basevent, AddonManager.CurrentAddon);
+                se = new Soundevent(name,AddonManager.CurrentAddon, basevent);
                 se.AddProperty(new SoundeventProperty("base", EventDisplays.SoundeventPicker));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }
             else
             {
-                se = new Soundevent(name, Addon: AddonManager.CurrentAddon);
+                se = new Soundevent(name, AddonManager.CurrentAddon);
                 se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.TypePicker));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }
-
-            
-
             AddonBasedEvents.Add(se);
             Editor.Instance.SoundeventName.SelectedItem = se;
             filtered = GetAllSounds();
@@ -162,9 +167,9 @@ namespace AAT.Soundevents
         }
         public ErrorCodes AddNewPropertyToEvent(Soundevent Event, PropertyNames propertyName)
         {
-            if(SoundeventsPropertyDefinitions.typeDictionary.TryGetValue(propertyName.ToString(),out Type t))
+            if (SoundeventsPropertyDefinitions.typeDictionary.TryGetValue(propertyName.ToString(), out Type t))
             {
-                return Event.AddProperty(new SoundeventProperty(propertyName,t));
+                return Event.AddProperty(new SoundeventProperty(propertyName, t));
 
             }
             return Event.AddProperty(new SoundeventProperty(propertyName.ToString()));
@@ -174,7 +179,7 @@ namespace AAT.Soundevents
         {
             return Event.AddProperty(new SoundeventProperty(typeName, types));
         }
-        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event,string type = "",string Val = "")
+        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event, string type = "", string Val = "")
         {
 
             return Event.AddProperty(new SoundeventProperty(type.Trim(), Val.Trim()));

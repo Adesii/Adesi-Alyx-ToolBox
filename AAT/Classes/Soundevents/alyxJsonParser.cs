@@ -65,45 +65,6 @@ namespace AAT.Soundevents
             }
             return soundevents;
         }
-        public List<Soundevent> GetAlyxSoundevents()
-        {
-            List<Soundevent> soundevents = new List<Soundevent>();
-            JObject jsonClass = JObject.Parse(jsonString);
-            foreach (var events in jsonClass["children"].Children())
-            {
-                string basice = null;
-                Soundevent se = null;
-                List<SoundeventProperty> propss = new List<SoundeventProperty>();
-                if (events["children"] != null)
-                    foreach (var properties in events["children"].Children())
-                    {
-                        EventDisplays t = EventDisplays.StringValue;
-                        if (properties["name"].ToString().Trim().CompareTo("base") == 0)
-                        {
-                            basice = properties["value"].ToString().Trim();
-                            se = new Soundevent(events["name"].ToString().Trim(), basice);
-                            t = EventDisplays.SoundeventPicker;
-                        }
-                        else if (properties["value"] != null)
-                        {
-                            t = SoundeventProperty.getDisplayType(properties["value"].ToString().Trim());
-                        }
-                        if (properties["value"] != null && properties["name"] != null)
-                        {
-                            propss.Add(new SoundeventProperty(properties["name"].ToString().Trim(), t, properties["value"].ToString().Trim()));
-                        }
-
-                    }
-                if (se == null)
-                    se = new Soundevent(events["name"].ToString().Trim());
-                foreach (var item in propss)
-                {
-                    se.AddProperty(item);
-                }
-                soundevents.Add(se);
-            }
-            return soundevents;
-        }
         public static Stream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();

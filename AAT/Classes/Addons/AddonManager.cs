@@ -8,8 +8,9 @@ namespace AAT.Addons
 {
     public static class AddonManager
     {
-        public static string CurrentAddon = "CustomGame";
-        public static List<Addon> GetAddons()
+        public static Addon CurrentAddon = new Addon("/");
+        public static int CurrentFileIndex = 0;
+        public static List<Addon> GetAddons(bool setCurrentAddonToFirst = false)
         {
             var paths = GetAddonPaths();
             List<Addon> addonlist = new List<Addon>();
@@ -18,6 +19,8 @@ namespace AAT.Addons
             {
                 addonlist.Add(new Addon(item));
             }
+            if (setCurrentAddonToFirst && addonlist.Count > 0)
+                ChangeAddon(addonlist[0]);
             return addonlist;
         }
 
@@ -25,12 +28,18 @@ namespace AAT.Addons
         {
             List<string> AddonPaths = new List<string>();
             //Debug.Print(Properties.Settings.Default.InstallPath);
-            var addonP= Properties.Settings.Default.InstallPath+"/content/hlvr_addons";
+            var addonP = Properties.Settings.Default.InstallPath + "/content/hlvr_addons";
             foreach (var item in Directory.GetDirectories(addonP))
             {
                 AddonPaths.Add(item);
             }
             return AddonPaths;
+        }
+        public static void ChangeAddon(Addon to)
+        {
+            CurrentAddon.ApplyChanges();
+            CurrentAddon = to;
+            Pages.Editor.Instance.SoundeventName.ItemsSource = CurrentAddon.AllSoundevents;
         }
     }
 }
