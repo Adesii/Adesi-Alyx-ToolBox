@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Linq;
 using System.Windows.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AAT.Pages
 {
@@ -29,6 +31,8 @@ namespace AAT.Pages
         public ObservableCollection<Addon> Addons { get => addons;}
         private ObservableCollection<Addon> addons = new ObservableCollection<Addon>();
 
+        public SortedDictionary<string, Type> TypeDictionary { get => SoundeventsPropertyDefinitions.typeDictionary; }
+
 
         public Editor()
         {
@@ -43,7 +47,6 @@ namespace AAT.Pages
             onlyAddon.Toggled += OnlyAddon_Toggled;
             soundeventEditorView.ItemsSource = builder.properties;
             properties = builder.properties;
-            ComboBoxAddItem.ItemsSource = Enum.GetNames(typeof(PropertyNames));
             vt = new ObservableCollection<string>
             {
                 "Float",
@@ -103,6 +106,7 @@ namespace AAT.Pages
         }
         private async void CreateMessageDialog(ErrorCodes code = ErrorCodes.OK, string text = "", string body = "")
         {
+            Debug.Print("MessageDialog Received");
             if (text != "")
             {
                 await MainWindow.Instance.ShowMessageAsync(text, body);
@@ -117,13 +121,16 @@ namespace AAT.Pages
                     case ErrorCodes.OK:
                         break;
                     case ErrorCodes.INVALID:
-                        await MainWindow.Instance.ShowMessageAsync("Invalid.\nHappens to the best of us", code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Invalid.", "Happens to the best of us\n"+code.ToString());
                         break;
                     case ErrorCodes.DUPLICATE:
-                        await MainWindow.Instance.ShowMessageAsync("Duplicate found.\nPlease make sure the Item doesn't already Exist", code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Duplicate found.", "Please make sure the Item doesn't already Exist\n"+ code.ToString());
                         break;
                     case ErrorCodes.NOTFOUND:
-                        await MainWindow.Instance.ShowMessageAsync("Item not Found.\nWhere has it gone?", code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Item not Found.", "Where has it gone ?\n" + code.ToString());
+                        break;
+                    case ErrorCodes.EMPTY:
+                        await MainWindow.Instance.ShowMessageAsync("Input can't be Empty.", "Type something in and Try again :)\n"+ code.ToString());
                         break;
                     default:
                         break;
@@ -177,6 +184,7 @@ namespace AAT.Pages
             {
                 CreateMessageDialog(builder.AddCustomPropertyToEvent(se, cb.SelectedItem.ToString()));
                 builder.ShowPropertiesOfSoundevent(se);
+                e.Handled = true;
             }
         }
 
@@ -204,6 +212,10 @@ namespace AAT.Pages
         private void AddonSelectionBox_Initialized(object sender, EventArgs e)
         {
             AddonSelectionBox.ItemsSource = Addons;
+        }
+        private void ComboBoxAddItem_Loaded(object sender,EventArgs e)
+        {
+            ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.typeDictionary;
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector

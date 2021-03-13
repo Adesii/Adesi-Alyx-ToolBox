@@ -34,19 +34,22 @@ namespace AAT
         public MainWindow()
         {
             InitializeComponent();
-            Instance = this;
-            MainFrame.Content = Pages.SettingsPage.Instance;
+            
+            MainFrame.Content = SettingsPage.Instance;
             Loaded += MainWindow_Loaded;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Instance = this;
             transitionThing.Content = null;
             transitionThing.Content = MainFrame;
             BackgroundDarkMode = (Brush)Instance.FindResource("MahApps.Brushes.MenuItem.Background");
             BackgroundLightMode = (Brush)Instance.FindResource("MahApps.Brushes.Gray");
             changeTheme(Properties.Settings.Default.DarkMode);
 
+            this.OverlayFadeIn = (System.Windows.Media.Animation.Storyboard)this.FindResource("fadeIn");
+            this.OverlayFadeOut = (System.Windows.Media.Animation.Storyboard)this.FindResource("fadeOut");
         }
         private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {

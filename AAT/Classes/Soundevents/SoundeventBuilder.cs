@@ -15,7 +15,8 @@ namespace AAT.Soundevents
         OK,
         INVALID,
         DUPLICATE,
-        NOTFOUND
+        NOTFOUND,
+        EMPTY
     }
     public enum PropertyNames
     {
@@ -130,9 +131,11 @@ namespace AAT.Soundevents
         public ErrorCodes CreateNewEvent(string name, string basevent = null)
         {
             Soundevent se = null;
-            foreach (var item in AllSoundEvents)
+            if (string.IsNullOrEmpty(name)) return ErrorCodes.EMPTY;
+            if (string.IsNullOrWhiteSpace(name)) return ErrorCodes.EMPTY;
+            foreach (var item in AddonBasedEvents)
             {
-                if (item.EventName == name)
+                if (item.EventName.Equals(name))
                 {
                     return ErrorCodes.DUPLICATE;
                 }

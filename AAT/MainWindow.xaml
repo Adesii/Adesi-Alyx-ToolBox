@@ -19,9 +19,28 @@
     WindowStartupLocation="CenterScreen"
     WindowTitleBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     mc:Ignorable="d">
+
     <mah:MetroWindow.Resources>
         <System:Double x:Key="IconSize">20</System:Double>
         <System:Double x:Key="IconWidth">40</System:Double>
+        <Storyboard
+            x:Key="fadeIn"
+            Name="fadeinner"
+            AccelerationRatio=".97"
+            BeginTime="0:0:0"
+            SpeedRatio="10.0"
+            Storyboard.TargetProperty="Opacity">
+            <DoubleAnimation To="1" />
+        </Storyboard>
+        <Storyboard
+            x:Key="fadeOut"
+            AccelerationRatio=".97"
+            BeginTime="0:0:0"
+            SpeedRatio="10.0"
+            Storyboard.TargetProperty="Opacity">
+            <DoubleAnimation To="0.0" />
+        </Storyboard>
+
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
@@ -45,12 +64,10 @@
                 x:Name="SettingsMenu"
                 Grid.Row="1"
                 Click="SettingsMenu_Click"
-                ToolTip="Open Settings">
-                <IconPack:BootstrapIcons
-                    Width="{StaticResource IconSize}"
-                    Height="{StaticResource IconSize}"
-                    Kind="Gear" />
-            </Button>
+                Content="{IconPack:BootstrapIcons Gear,
+                                                  Height={StaticResource IconSize},
+                                                  Width={StaticResource IconSize}}"
+                ToolTip="Open Settings" />
 
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
@@ -65,6 +82,7 @@
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -81,9 +99,6 @@
                 Navigating="MainFrame_Navigating"
                 NavigationUIVisibility="Hidden" />
         </mah:TransitioningContentControl>
-
-
-
 
     </Grid>
 </mah:MetroWindow>

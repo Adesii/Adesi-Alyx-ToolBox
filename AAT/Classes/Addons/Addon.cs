@@ -14,7 +14,7 @@ namespace AAT.Addons
 
         public string Path = "/";
 
-        public List<SoundeventFile> AddonSpecificAddonFiles; 
+        public List<SoundeventFile> AddonSpecificAddonFiles = new List<SoundeventFile>(); 
 
         public Addon(string path, bool onlySoundeventsFolder = false)
         {

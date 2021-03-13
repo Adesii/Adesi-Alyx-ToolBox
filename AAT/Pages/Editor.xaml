@@ -192,10 +192,13 @@
             Grid.Row="3"
             Grid.Column="1"
             Margin="10"
+            DisplayMemberPath="Key"
             IsEditable="True"
+            IsReadOnly="True"
+            ItemsSource="{Binding TypeDictionary, ElementName=page}"
             KeyUp="ComboBoxAddItem_KeyDown"
-            SelectionChanged="ComboBoxAddItem_SelectionChanged"
-            Text="{Binding TypeName}" />
+            Loaded="ComboBoxAddItem_Loaded"
+            SelectionChanged="ComboBoxAddItem_SelectionChanged" />
         <Label
             Grid.Row="3"
             Width="140"
