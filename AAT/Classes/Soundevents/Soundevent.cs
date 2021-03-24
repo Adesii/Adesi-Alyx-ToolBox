@@ -8,21 +8,35 @@ namespace AAT.Soundevents
 {
     public class Soundevent
     {
-        public Soundevent(string SoundeventName, Addons.Addon ownAddon = null, string baseEvent = null,string FileName = "base")
+        public Soundevent(string SoundeventName, Addons.Addon ownAddon = null, string baseEvent = null, string FileName = "base")
         {
             EventName = SoundeventName;
+            Hash = ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(SoundeventName));
             BaseEvent = baseEvent;
             Addon = ownAddon;
             this.FileName = FileName;
-            if(ownAddon != null)
+            if (ownAddon != null)
             {
                 ownAddon.AddNewSoundEvent(this);
             }
         }
 
+        public uint Hash { get; set; }
         public string EventName { get; }
+        public string LineText
+        {
+            get
+            {
+
+                var t = GetProperty(new SoundeventProperty("line_text"));
+                if (t != null)
+                    return t.Value;
+                else return Caption.Definition;
+            }
+        }
         public string FileName { get; private set; }
         public string BaseEvent { get; }
+        public HLACaptionReplacer.ClosedCaption Caption { get; set; }
         public Addons.Addon Addon { get; }
         public List<SoundeventProperty> Properties { get; } = new List<SoundeventProperty>();
 

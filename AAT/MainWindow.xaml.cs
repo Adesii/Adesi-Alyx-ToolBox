@@ -68,6 +68,8 @@ namespace AAT
                 AddonSelectionBox.SelectedIndex = AddonManager.Addons.IndexOf(AddonManager.Addons.Where((e) => { return e.AddonName == Properties.Settings.Default.LastSelectedAddon; }).First());
 
             }
+            _ = Soundevents.SoundeventBuilder.Instance;
+            Classes.CloseCaptions.CloseCaptionManager.LoadCaptions();
         }
 
         
