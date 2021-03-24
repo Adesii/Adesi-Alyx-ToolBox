@@ -207,13 +207,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Add New Type: " />
-        <ComboBox
-            x:Name="AddonSelectionBox"
-            Grid.Column="1"
-            Margin="116,10,10,9"
-            IsSynchronizedWithCurrentItem="True"
-            Loaded="AddonSelectionBox_Initialized"
-            SelectionChanged="AddonSelectionBox_SelectionChanged" />
+        
 
     </Grid>
 </Page>

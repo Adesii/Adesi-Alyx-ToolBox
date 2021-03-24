@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -8,8 +9,24 @@ namespace AAT.Addons
 {
     public static class AddonManager
     {
+        public static Action AddonChanged;
         public static Addon CurrentAddon = new Addon("/");
         public static int CurrentFileIndex = 0;
+
+        public static ObservableCollection<Addon> Addons
+        {
+            get
+            {
+                if (addons == null)
+                {
+                    addons = addons = new ObservableCollection<Addon>(GetAddons(true));
+                }
+                return addons;
+
+            }
+        }
+        private static ObservableCollection<Addon> addons;
+
         public static List<Addon> GetAddons(bool setCurrentAddonToFirst = false)
         {
             var paths = GetAddonPaths();
@@ -39,7 +56,7 @@ namespace AAT.Addons
         {
             CurrentAddon.ApplyChanges();
             CurrentAddon = to;
-            Pages.Editor.Instance.SoundeventName.ItemsSource = CurrentAddon.AllSoundevents;
+            AddonChanged?.Invoke();
         }
     }
 }

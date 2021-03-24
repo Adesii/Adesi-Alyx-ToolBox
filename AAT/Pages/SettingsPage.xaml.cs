@@ -15,7 +15,15 @@ namespace AAT.Pages
     /// </summary>
     public partial class SettingsPage : Page
     {
-        public static SettingsPage Instance = new SettingsPage();
+        private static SettingsPage m_instance;
+        public static SettingsPage Instance
+        {
+            get
+            {
+                if (m_instance == null) m_instance = new SettingsPage();
+                return m_instance;
+            }
+        }
         public SettingsPage()
         {
             InitializeComponent();

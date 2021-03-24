@@ -17,6 +17,7 @@ using AAT.Pages;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps;
+using AAT.Addons;
 
 namespace AAT
 {
@@ -50,6 +51,16 @@ namespace AAT
 
             this.OverlayFadeIn = (System.Windows.Media.Animation.Storyboard)this.FindResource("fadeIn");
             this.OverlayFadeOut = (System.Windows.Media.Animation.Storyboard)this.FindResource("fadeOut");
+
+            if (Properties.Settings.Default.LastSelectedAddon == "None")
+            {
+                AddonSelectionBox.SelectedIndex = 0;
+            }
+            else
+            {
+                AddonSelectionBox.SelectedIndex = AddonManager.Addons.IndexOf(AddonManager.Addons.Where((e) => { return e.AddonName == Properties.Settings.Default.LastSelectedAddon; }).First());
+
+            }
         }
         private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -60,6 +71,11 @@ namespace AAT
         {
             MainFrame.Content = Pages.Editor.Instance;
         }
+        private void CaptionClick(object sender,RoutedEventArgs e)
+        {
+            MainFrame.Content = Pages.CaptionEditor.Instance;
+        }
+
         public static void changeTheme(bool darkmode)
         {
             if (darkmode)
@@ -110,6 +126,17 @@ namespace AAT
         {
             transitionThing.Content = null;
             transitionThing.Content = MainFrame;
+        }
+
+
+
+        private void AddonSelectionBox_Initialized(object sender, EventArgs e)
+        {
+            AddonSelectionBox.ItemsSource = AddonManager.Addons;
+        }
+        private void AddonSelectionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddonManager.ChangeAddon(AddonManager.Addons[AddonSelectionBox.SelectedIndex]);
         }
     }
 }

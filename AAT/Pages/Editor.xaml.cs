@@ -20,7 +20,14 @@ namespace AAT.Pages
     /// </summary>
     public partial class Editor : Page
     {
-        public static Editor Instance = new Editor();
+        private static Editor m_instance;
+        public static Editor Instance {
+            get
+            {
+                if (m_instance == null) m_instance = new Editor();
+                return m_instance;
+            }
+        }
         SoundeventBuilder builder;
         ErrorCodes code = ErrorCodes.OK;
 
@@ -28,8 +35,7 @@ namespace AAT.Pages
 
         public ObservableCollection<string> ValueTypes { get => vt; }
         private ObservableCollection<string> vt = new ObservableCollection<string>();
-        public ObservableCollection<Addon> Addons { get => addons;}
-        private ObservableCollection<Addon> addons = new ObservableCollection<Addon>();
+        
 
         public SortedDictionary<string, Type> TypeDictionary { get => SoundeventsPropertyDefinitions.typeDictionary; }
 
@@ -38,6 +44,7 @@ namespace AAT.Pages
         {
             InitializeComponent();
             Loaded += Editor_Loaded;
+            Unloaded += Editor_Unloaded;
         }
 
         private void Editor_Loaded(object sender, RoutedEventArgs e)
@@ -54,16 +61,17 @@ namespace AAT.Pages
                 "Eventpicker",
                 "Comment"
             };
-            addons = new ObservableCollection<Addon>(AddonManager.GetAddons(true));
-            if(Properties.Settings.Default.LastSelectedAddon == "None")
-            {
-                AddonSelectionBox.SelectedIndex = 0;
-            }
-            else
-            {
-                AddonSelectionBox.SelectedIndex = addons.IndexOf(addons.Where((e) => { return e.AddonName == Properties.Settings.Default.LastSelectedAddon; }).First());
-
-            }
+            
+            
+            AddonManager.AddonChanged += addonChanged;
+        }
+        private void Editor_Unloaded(object sender, RoutedEventArgs e)
+        {
+            AddonManager.AddonChanged -= addonChanged;
+        }
+        private void addonChanged()
+        {
+            SoundeventName.ItemsSource = AddonManager.CurrentAddon.AllSoundevents;
         }
 
         private void OnlyAddon_Toggled(object sender, RoutedEventArgs e)
@@ -209,19 +217,15 @@ namespace AAT.Pages
             Debug.Print(b.Text);
         }
 
-        private void AddonSelectionBox_Initialized(object sender, EventArgs e)
-        {
-            AddonSelectionBox.ItemsSource = Addons;
-        }
+       
         private void ComboBoxAddItem_Loaded(object sender,EventArgs e)
         {
             ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.typeDictionary;
         }
 
-        private void AddonSelectionBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            AddonManager.ChangeAddon(addons[AddonSelectionBox.SelectedIndex]);
-        }
+       
+
+        
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {

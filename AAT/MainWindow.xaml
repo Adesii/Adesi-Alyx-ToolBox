@@ -16,6 +16,8 @@
     GlowBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     IsManipulationEnabled="True"
     ResizeMode="CanResizeWithGrip"
+    TitleAlignment="Center"
+    TitleCharacterCasing="Normal"
     WindowStartupLocation="CenterScreen"
     WindowTitleBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     mc:Ignorable="d">
@@ -44,6 +46,22 @@
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
+            <Button
+                x:Name="CaptionEditor"
+                Click="CaptionClick"
+                ToolTip="Open the Caption Editor">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <IconPack:BootstrapIcons
+                                Width="{StaticResource IconWidth}"
+                                Height="{StaticResource IconSize}"
+                                Kind="BadgeCc" />
+                            <TextBlock Text="Close Caption Editor" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
             <Button
                 x:Name="EditorMenu"
                 Click="EditorMenu_Click"
@@ -79,6 +97,15 @@
                     Height="22"
                     Kind="SocialGithubOctocat" />
             </Button>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Current Addon" />
+                <ComboBox
+                    x:Name="AddonSelectionBox"
+                    IsSynchronizedWithCurrentItem="True"
+                    Loaded="AddonSelectionBox_Initialized"
+                    SelectionChanged="AddonSelectionBox_SelectionChanged" />
+            </StackPanel>
+
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <Grid>

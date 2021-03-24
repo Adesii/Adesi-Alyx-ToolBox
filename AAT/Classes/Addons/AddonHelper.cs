@@ -6,16 +6,6 @@ using ValveKeyValue;
 
 namespace AAT.Addons
 {
-   
-    public class InvalidFileFormatException : Exception
-    {
-        internal InvalidFileFormatException() : base() { }
-        internal InvalidFileFormatException(string message) : base(message) { }
-        internal InvalidFileFormatException(string message, Exception inner) : base(message, inner) { }
-        protected InvalidFileFormatException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    }
     public static class AddonHelper
     {
         static string[] GetAddons(string AlyxInstallFolder)
