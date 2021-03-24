@@ -31,7 +31,9 @@
 
   <ItemGroup>
     <Reference Include="HLACaptionReplacerLibrary">
-      <HintPath>E:\Blender A new Generation\Scripts\alyx\subtitles\HLACaptionReplacer\HLACaptionReplacerLibrary\bin\Debug\net5.0\HLACaptionReplacerLibrary.dll</HintPath>
+      <HintPath>dll\HLACaptionReplacerLibrary.dll</HintPath>
+      <Private>true</Private>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
 
