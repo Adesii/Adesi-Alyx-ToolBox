@@ -22,7 +22,7 @@ namespace AAT.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace AAT.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AAT.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace AAT.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -79,27 +79,27 @@ namespace AAT.Properties {
         ///
         ///.
         /// </summary>
-        internal static string aboutText {
+        public static string aboutText {
             get {
                 return ResourceManager.GetString("aboutText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;name&quot;: &quot;Root&quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;Error &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;type &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;src1_2d\&quot;&quot;}]}, {&quot;name&quot;: &quot;volume &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 1.000000&quot;}]}, {&quot;name&quot;: &quot;pitch &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 1.000000&quot;}]}, {&quot;name&quot;: &quot;limiter_on &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 0.000000&quot;}]}, {&quot;name&quot;: &quot;vsnd_files &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;sounds/null.vsnd\&quot;&quot;}]}]}, {&quot;name&quot;: &quot;AI_BaseNPC.BodyDrop_Heavy &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;type &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;src1_3d\&quot;&quot;}]}, {&quot;name&quot;: &quot;volume &quot;, &quot;childr [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to # Cheat Sheet
+        ///
+        ///## Tags:
+        ///| Tag | Description
+        ///|---|---
+        ///| \&lt;clr:R,G,B&gt; | Defines the Color of the next Segment
+        ///| \&lt;HEADSET&gt; | ...
+        ///| \&lt;sb&gt; | Bold
+        ///| \&lt;I&gt;| Italic
+        ///.
         /// </summary>
-        internal static string BaseSoundevents {
+        public static string CheatSheet {
             get {
-                return ResourceManager.GetString("BaseSoundevents", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {&quot;name&quot;: &quot;Root&quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;Error &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;type &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;src1_2d\&quot;&quot;}]}, {&quot;name&quot;: &quot;volume &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 1.000000&quot;}]}, {&quot;name&quot;: &quot;pitch &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 1.000000&quot;}]}, {&quot;name&quot;: &quot;limiter_on &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; 0.000000&quot;}]}, {&quot;name&quot;: &quot;vsnd_files &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;sounds/null.vsnd\&quot;&quot;}]}]}, {&quot;name&quot;: &quot;AI_BaseNPC.BodyDrop_Heavy &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot;type &quot;, &quot;children&quot;: [{&quot;name&quot;: &quot; \&quot;src1_3d\&quot;&quot;}]}, {&quot;name&quot;: &quot;volume &quot;, &quot;childr [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string FinalFileSmall {
-            get {
-                return ResourceManager.GetString("FinalFileSmall", resourceCulture);
+                return ResourceManager.GetString("CheatSheet", resourceCulture);
             }
         }
     }

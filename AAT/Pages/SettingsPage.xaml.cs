@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using ControlzEx.Theming;
 using Microsoft.Win32;
 using ValveKeyValue;
 
@@ -47,8 +48,8 @@ namespace AAT.Pages
 
             AboutPage.Markdown = markdown;
             MainWindow.changeTheme(Properties.Settings.Default.DarkMode);
-
-            
+            MainWindow.ChangeTheme(Instance);
+              
         }
 
         private void NavigationService_Navigating(object sender, NavigatingCancelEventArgs e)

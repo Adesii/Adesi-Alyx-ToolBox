@@ -32,15 +32,6 @@ namespace AAT.Pages
             }
         }
         private static Cheatsheet cheatsheet;
-        private ObservableCollection<Soundevents.Soundevent> m_soundevents;
-        public ObservableCollection<Soundevents.Soundevent> AddonSoundevents
-        {
-            get
-            {
-                if (m_soundevents == null) m_soundevents = Soundevents.SoundeventBuilder.Instance.AddonBasedEvents;
-                return m_soundevents;
-            }
-        }
         public CaptionEditor()
         {
             InitializeComponent();
@@ -51,6 +42,9 @@ namespace AAT.Pages
         {
             AddonManager.AddonChanged += addonChanged;
             CloseCaptionManager.LoadCaptions();
+            MainWindow.ChangeTheme(Instance);
+
+
         }
 
         private void addonChanged()

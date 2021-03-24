@@ -8,13 +8,28 @@
     xmlns:local="clr-namespace:AAT"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpf="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
     Title="Cheatsheet"
-    Width="800"
-    Height="450"
+    Width="1595"
+    Height="800"
     Background="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     Closed="MetroWindow_Closed"
     Foreground="{DynamicResource MahApps.Brushes.Flyout.Foreground}"
     GlowBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <wpf:MarkdownViewer
+            Name="viewer"
+            Background="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text}"
+            Foreground="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text}"
+            Markdown="# Tags:">
+            <wpf:MarkdownViewer.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/StyleResources/CheatSheetMarkdownStyle.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </wpf:MarkdownViewer.Resources>
+        </wpf:MarkdownViewer>
+    </Grid>
 </mah:MetroWindow>

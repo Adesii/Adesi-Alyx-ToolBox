@@ -18,10 +18,8 @@ namespace AAT.Soundevents
 {
     class alyxJsonParser
     {
-        string jsonString;
         public alyxJsonParser()
         {
-            jsonString = Properties.Resources.BaseSoundevents;
         }
 
         public static List<Soundevent> allsoundeventsfromGame;

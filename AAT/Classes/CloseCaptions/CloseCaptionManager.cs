@@ -37,7 +37,7 @@ namespace AAT.Classes.CloseCaptions
                 lc.captionFile = new ClosedCaptions();
                 await Task.Run(()=> { lc.captionFile.Read(File.OpenRead(item)); });
                 AddonSpecificCaptions.Add(lc);
-                Debug.WriteLine(lc);
+                //Debug.WriteLine(lc.language);
             }
 
         }

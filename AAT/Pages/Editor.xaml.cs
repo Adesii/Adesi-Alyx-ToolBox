@@ -64,6 +64,9 @@ namespace AAT.Pages
             
             
             AddonManager.AddonChanged += addonChanged;
+            MainWindow.ChangeTheme(Instance);
+
+
         }
         private void Editor_Unloaded(object sender, RoutedEventArgs e)
         {

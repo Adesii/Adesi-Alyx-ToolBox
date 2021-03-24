@@ -32,12 +32,19 @@ namespace AAT
 
         public static Brush BackgroundLightMode;
         public static Brush BackgroundDarkMode;
+        static List<object> classesToUpdateTheme = new();
         public MainWindow()
         {
             InitializeComponent();
             
             MainFrame.Content = SettingsPage.Instance;
             Loaded += MainWindow_Loaded;
+            Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            Windows.Cheatsheet.Instance?.Close();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -62,6 +69,9 @@ namespace AAT
 
             }
         }
+
+        
+
         private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = Pages.SettingsPage.Instance;
@@ -81,8 +91,6 @@ namespace AAT
             if (darkmode)
             {
                 ThemeManager.Current.ChangeTheme(Instance, "Dark." + Theme);
-                ThemeManager.Current.ChangeTheme(Editor.Instance, "Dark." + Theme);
-                ThemeManager.Current.ChangeTheme(SettingsPage.Instance, "Dark." + Theme);
 
                 BackgroundDarkMode = (Brush)Instance.FindResource("MahApps.Brushes.MenuItem.Background");
                 BackgroundLightMode = (Brush)Instance.FindResource("MahApps.Brushes.Gray");
@@ -100,8 +108,6 @@ namespace AAT
             else
             {
                 ThemeManager.Current.ChangeTheme(Instance, "Light." + Theme);
-                ThemeManager.Current.ChangeTheme(Editor.Instance, "Light." + Theme);
-                ThemeManager.Current.ChangeTheme(SettingsPage.Instance, "Light." + Theme);
 
                 BackgroundDarkMode = (Brush)Instance.FindResource("MahApps.Brushes.MenuItem.Background");
                 BackgroundLightMode = (Brush)Instance.FindResource("MahApps.Brushes.Gray");
@@ -116,6 +122,27 @@ namespace AAT
                 SettingsPage.Instance.ThemeSelector.Content = "Light";
                 Properties.Settings.Default.Save();
             }
+            ChangeTheme(SettingsPage.Instance);
+
+        }
+        public static void ChangeTheme(FrameworkElement self)
+        {
+            
+
+            ThemeManager.Current.ChangeTheme(self, Properties.Settings.Default.DarkMode ? "Dark." + Theme : "Light." + Theme);
+            foreach (var item in classesToUpdateTheme)
+            {
+                if(self != item)
+                {
+                    ThemeManager.Current.ChangeTheme(self, Properties.Settings.Default.DarkMode ? "Dark." + Theme : "Light." + Theme);
+                }
+            }
+            foreach (var item in classesToUpdateTheme)
+            {
+                if (item == self)
+                    return;
+            }
+            classesToUpdateTheme.Add(self);
         }
         private void LaunchGitHubSite(object sender, RoutedEventArgs e)
         {
