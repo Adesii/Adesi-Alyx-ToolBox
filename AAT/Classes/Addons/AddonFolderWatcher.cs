@@ -14,6 +14,7 @@ namespace AAT.Addons
             var c = Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam", "InstallPath", null);
             if (c == null) return Properties.Settings.Default.InstallPath;
             var path = GetAlyxPath(c.ToString());
+            Console.WriteLine(c.ToString());
             Properties.Settings.Default.InstallPath = path;
             return path;
         }

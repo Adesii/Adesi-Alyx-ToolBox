@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AAT.Addons;
+using AAT.Classes.CloseCaptions;
 using AAT.Windows;
 
 namespace AAT.Pages
@@ -49,6 +50,7 @@ namespace AAT.Pages
         private void CaptionEditor_Loaded(object sender, RoutedEventArgs e)
         {
             AddonManager.AddonChanged += addonChanged;
+            CloseCaptionManager.LoadCaptions();
         }
 
         private void addonChanged()

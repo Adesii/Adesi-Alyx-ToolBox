@@ -45,6 +45,7 @@ namespace AAT.Soundevents
         }
 
         public ObservableCollection<Soundevent> AllSoundEvents = new ObservableCollection<Soundevent>();
+        public ObservableCollection<Soundevent> AllBaseSoundEvents = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> filtered = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> AddonBasedEvents { get => AddonManager.CurrentAddon.AllSoundevents; }
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
@@ -62,16 +63,17 @@ namespace AAT.Soundevents
             FillBaseGameEventsList();
 
             //AddonBasedEvents = AllSoundEvents;
-            Editor.Instance.BaseSoundeventName.ItemsSource = GetAllSounds();
+            Editor.Instance.BaseSoundeventName.ItemsSource = AllBaseSoundEvents;
             Editor.Instance.SoundeventName.ItemsSource = AddonBasedEvents;
         }
 
-        private void FillBaseGameEventsList()
+        private async void FillBaseGameEventsList()
         {
-            alyxJsonParser p = new alyxJsonParser();
-            foreach (var item in p.GetAlyxSoundeventFromGame())
+            await alyxJsonParser.GetAlyxSoundeventFromGame();
+            foreach (var item in alyxJsonParser.allsoundeventsfromGame)
             {
                 AllSoundEvents.Add(item);
+                AllBaseSoundEvents.Add(item);
             }
         }
         public void SwitchOnlyAddons(bool state)

@@ -4,7 +4,7 @@
 	<RootNamespace>AAT</RootNamespace>
     <AssemblyName>AAT</AssemblyName>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>AAT.App</StartupObject>
   
@@ -27,6 +27,12 @@
 	<PackageReference Include="ValveKeyValue" Version="0.5.0.4" />
 	<PackageReference Include="ValvePak" Version="1.0.2.35" />
 	<PackageReference Include="ValveResourceFormat" Version="0.1.6.515" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HLACaptionReplacerLibrary">
+      <HintPath>E:\Blender A new Generation\Scripts\alyx\subtitles\HLACaptionReplacer\HLACaptionReplacerLibrary\bin\Debug\net5.0\HLACaptionReplacerLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

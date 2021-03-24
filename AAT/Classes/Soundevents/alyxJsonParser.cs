@@ -24,46 +24,55 @@ namespace AAT.Soundevents
             jsonString = Properties.Resources.BaseSoundevents;
         }
 
-        public List<Soundevent> GetAlyxSoundeventFromGame()
+        public static List<Soundevent> allsoundeventsfromGame;
+
+        public static Task GetAlyxSoundeventFromGame()
         {
-            List<Soundevent> soundevents = new List<Soundevent>();
-            var pakr = new SteamDatabase.ValvePak.Package();
-            pakr.Read(Properties.Settings.Default.InstallPath + "/game/hlvr/pak01_dir.vpk");
-            foreach (var item in pakr.Entries["vsndevts_c"])
+            return Task.Run(() =>
             {
-                Soundevent se = null;
-                List<SoundeventProperty> propss = new List<SoundeventProperty>();
 
-                pakr.ReadEntry(item, out byte[] b, false);
-                var res = new Resource();
-                res.Read(new MemoryStream(b));
-                //Debug.Print(res.GetBlockByType(BlockType.DATA).ToString());
-                KV3File file = ((BinaryKV3)res.DataBlock).GetKV3File();
-                foreach (var obb in file.Root)
+
+                List<Soundevent> soundevents = new List<Soundevent>();
+                var pakr = new SteamDatabase.ValvePak.Package();
+                pakr.Read(Properties.Settings.Default.InstallPath + "/game/hlvr/pak01_dir.vpk");
+                foreach (var item in pakr.Entries["vsndevts_c"])
                 {
-                    se = new Soundevent(obb.Key);
-                    foreach (var inobb in ((KVObject)obb.Value))
+                    Soundevent se = null;
+                    List<SoundeventProperty> propss = new List<SoundeventProperty>();
+
+                    pakr.ReadEntry(item, out byte[] b, false);
+                    var res = new Resource();
+                    res.Read(new MemoryStream(b));
+                    //Debug.Print(res.GetBlockByType(BlockType.DATA).ToString());
+                    KV3File file = ((BinaryKV3)res.DataBlock).GetKV3File();
+                    foreach (var obb in file.Root)
                     {
-                        SoundeventsPropertyDefinitions.typeDictionary.TryAdd(inobb.Key,inobb.Value.GetType());
-                        switch (inobb.Key)
+                        se = new Soundevent(obb.Key);
+                        foreach (var inobb in ((KVObject)obb.Value))
                         {
-                            case "base":
-                                propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
-                                break;
-                            default:
-                                propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.StringValue, inobb.Value.ToString()));
-                                break;
+                            SoundeventsPropertyDefinitions.typeDictionary.TryAdd(inobb.Key, inobb.Value.GetType());
+                            switch (inobb.Key)
+                            {
+                                case "base":
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
+                                    break;
+                                default:
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.StringValue, inobb.Value.ToString()));
+                                    break;
+                            }
+
+                            //Debug.Print(inobb.Value.ToString());
                         }
-
-                        //Debug.Print(inobb.Value.ToString());
+                        soundevents.Add(se);
+                        //Debug.Print("");
                     }
-                    soundevents.Add(se);
-                    //Debug.Print("");
-                }
 
-                //var s = VKr.Deserialize();
-            }
-            return soundevents;
+                    //var s = VKr.Deserialize();
+
+                }
+                allsoundeventsfromGame = soundevents;
+                Debug.WriteLine("finished loading all sounds");
+            });
         }
         public static Stream GenerateStreamFromString(string s)
         {
