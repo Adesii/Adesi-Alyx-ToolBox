@@ -63,11 +63,10 @@ namespace AAT.Soundevents
         public string Value { get => value; set => this.value = value; }
         public Type Type { get => type; set => type = value; }
         public EventDisplays DisAs { get => disAs; set => disAs = value; }
-        public SortedDictionary<string,Type> TypeDictionary { get => SoundeventsPropertyDefinitions.typeDictionary; }
 
         public override string ToString()
         {
-            return TypeName+"; "+Value;
+            return TypeName;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace AAT.Soundevents
                         se = new Soundevent(obb.Key);
                         foreach (var inobb in ((KVObject)obb.Value))
                         {
-                            SoundeventsPropertyDefinitions.typeDictionary.TryAdd(inobb.Key, inobb.Value.GetType());
+                            SoundeventsPropertyDefinitions.TypeDictionary.TryAdd(inobb.Key, inobb.Value.GetType());
                             switch (inobb.Key)
                             {
                                 case "base":

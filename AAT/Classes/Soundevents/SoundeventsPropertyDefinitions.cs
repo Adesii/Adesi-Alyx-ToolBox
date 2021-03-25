@@ -9,6 +9,20 @@ namespace AAT.Soundevents
     class SoundeventsPropertyDefinitions
     {
         public static SoundeventsPropertyDefinitions Instance = new SoundeventsPropertyDefinitions();
-        public static SortedDictionary<string, Type> typeDictionary = new SortedDictionary<string, Type>();
+
+        private static SortedDictionary<string, Type> m_typeDictionary;
+        public static SortedDictionary<string, Type> TypeDictionary
+        {
+            get
+            {
+                if (m_typeDictionary == null) m_typeDictionary = new();
+
+                return m_typeDictionary;
+            }
+            set
+            {
+                m_typeDictionary = value;
+            }
+        }
     }
 }

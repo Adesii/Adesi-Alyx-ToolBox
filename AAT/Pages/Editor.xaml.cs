@@ -21,7 +21,8 @@ namespace AAT.Pages
     public partial class Editor : Page
     {
         private static Editor m_instance;
-        public static Editor Instance {
+        public static Editor Instance
+        {
             get
             {
                 if (m_instance == null) m_instance = new Editor();
@@ -31,13 +32,13 @@ namespace AAT.Pages
         SoundeventBuilder builder;
         ErrorCodes code = ErrorCodes.OK;
 
-        public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
+        public ObservableCollection<SoundeventProperty> properties = new();
 
         public ObservableCollection<string> ValueTypes { get => vt; }
         private ObservableCollection<string> vt = new ObservableCollection<string>();
-        
 
-        public SortedDictionary<string, Type> TypeDictionary { get => SoundeventsPropertyDefinitions.typeDictionary; }
+
+        public SortedDictionary<string, Type> TypeDictionary { get => SoundeventsPropertyDefinitions.TypeDictionary; }
 
 
         public Editor()
@@ -61,12 +62,12 @@ namespace AAT.Pages
                 "Eventpicker",
                 "Comment"
             };
-            
-            
+
+
             AddonManager.AddonChanged += addonChanged;
             MainWindow.ChangeTheme(Instance);
 
-
+            addonChanged();
         }
         private void Editor_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -106,15 +107,12 @@ namespace AAT.Pages
             }
         }
 
-        private void BaseEvent_TouchDown(object sender, TouchEventArgs e)
+        public void SetFiltered(Func<Soundevent,bool> predicate)
         {
-
+            ObservableCollection<Soundevent> b = new(SoundeventBuilder.Instance.AllBaseSoundEvents.Concat(SoundeventBuilder.Instance.AddonBasedEvents));
+            BaseSoundeventName.ItemsSource = new ObservableCollection<Soundevent>(b.Where(predicate));
         }
-
-        private void SoundEvenName_TouchDown(object sender, TouchEventArgs e)
-        {
-
-        }
+        
         private async void CreateMessageDialog(ErrorCodes code = ErrorCodes.OK, string text = "", string body = "")
         {
             Debug.Print("MessageDialog Received");
@@ -132,16 +130,16 @@ namespace AAT.Pages
                     case ErrorCodes.OK:
                         break;
                     case ErrorCodes.INVALID:
-                        await MainWindow.Instance.ShowMessageAsync("Invalid.", "Happens to the best of us\n"+code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Invalid.", "Happens to the best of us\n" + code.ToString());
                         break;
                     case ErrorCodes.DUPLICATE:
-                        await MainWindow.Instance.ShowMessageAsync("Duplicate found.", "Please make sure the Item doesn't already Exist\n"+ code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Duplicate found.", "Please make sure the Item doesn't already Exist\n" + code.ToString());
                         break;
                     case ErrorCodes.NOTFOUND:
                         await MainWindow.Instance.ShowMessageAsync("Item not Found.", "Where has it gone ?\n" + code.ToString());
                         break;
                     case ErrorCodes.EMPTY:
-                        await MainWindow.Instance.ShowMessageAsync("Input can't be Empty.", "Type something in and Try again :)\n"+ code.ToString());
+                        await MainWindow.Instance.ShowMessageAsync("Input can't be Empty.", "Type something in and Try again :)\n" + code.ToString());
                         break;
                     default:
                         break;
@@ -156,6 +154,7 @@ namespace AAT.Pages
         {
             if (BaseSoundeventName.Text.Equals(""))
             {
+
                 code = builder.CreateNewEvent(SoundeventName.Text);
             }
             else
@@ -220,15 +219,15 @@ namespace AAT.Pages
             Debug.Print(b.Text);
         }
 
-       
-        private void ComboBoxAddItem_Loaded(object sender,EventArgs e)
+
+        private void ComboBoxAddItem_Loaded(object sender, EventArgs e)
         {
-            ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.typeDictionary;
+            ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.TypeDictionary;
         }
 
-       
 
-        
+
+
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {
@@ -258,5 +257,5 @@ namespace AAT.Pages
             return base.SelectTemplate(item, container);
         }
     }
-    
+
 }

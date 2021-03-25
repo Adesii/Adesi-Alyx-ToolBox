@@ -46,12 +46,11 @@ namespace AAT.Soundevents
 
         public ObservableCollection<Soundevent> AllSoundEvents = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> AllBaseSoundEvents = new ObservableCollection<Soundevent>();
-        public ObservableCollection<Soundevent> filtered = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> AddonBasedEvents { get => AddonManager.CurrentAddon.AllSoundevents; }
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
 
 
-        private Dictionary<options, bool> lastButtonState = new Dictionary<options, bool>();
+        private Dictionary<options, Func<Soundevent,bool>> lastButtonState = new();
         enum options
         {
             onlyAddon,
@@ -78,66 +77,25 @@ namespace AAT.Soundevents
         }
         public void SwitchOnlyAddons(bool state)
         {
-            lastButtonState[options.onlyBase] = state;
-
-            if (state)
-            {
-                filtered = GetAllSounds();
-                IEnumerable<Soundevent> query = filtered.Where((a) => a.Addon == AddonManager.CurrentAddon);
-                filtered.Clear();
-                foreach (var item in query)
-                {
-                    filtered.Add(item);
-                }
-                Pages.Editor.Instance.BaseSoundeventName.ItemsSource = filtered;
-                lastButtonState[options.onlyBase] = state;
-            }
+            if(state)
+            Editor.Instance.SetFiltered((e) => { return (e.Addon != null && e.Addon.AddonName.Equals(AddonManager.CurrentAddon.AddonName)); });
             else
             {
-                if (noFilters()) Pages.Editor.Instance.BaseSoundeventName.ItemsSource = GetAllSounds();
+                Editor.Instance.SetFiltered((e)=> { return true; });
             }
 
         }
         public void SwitchOnlyBase(bool state)
         {
-            lastButtonState[options.onlyBase] = state;
             if (state)
-            {
-                filtered = GetAllSounds();
-                IEnumerable<Soundevent> query = filtered.Where((a) => a.BaseEvent != "" || a.BaseEvent != null);
-                filtered.Clear();
-                foreach (var item in query)
-                {
-                    filtered.Add(item);
-                }
-
-                Pages.Editor.Instance.BaseSoundeventName.ItemsSource = filtered;
-            }
+                Editor.Instance.SetFiltered((e) => { return e.Addon == null; });
             else
             {
-                if (noFilters()) Pages.Editor.Instance.BaseSoundeventName.ItemsSource = GetAllSounds();
+                Editor.Instance.SetFiltered((e) => { return true; });
             }
         }
-        private bool noFilters()
-        {
-            int i = 0;
-            foreach (var item in lastButtonState)
-            {
-                if (item.Value) i++;
-            }
-            return i <= 0;
-        }
-        private ObservableCollection<Soundevent> GetAllSounds()
-        {
-            ObservableCollection<Soundevent> onion = new ObservableCollection<Soundevent>();
-            var res = new ObservableCollection<Soundevent>(AllSoundEvents.Concat(AddonBasedEvents));
-            foreach (var item in res)
-            {
-                onion.Add(item);
-            }
 
-            return onion;
-        }
+
         public ErrorCodes CreateNewEvent(string name, string basevent = null)
         {
             Soundevent se = null;
@@ -164,12 +122,11 @@ namespace AAT.Soundevents
             }
             AddonBasedEvents.Add(se);
             Editor.Instance.SoundeventName.SelectedItem = se;
-            filtered = GetAllSounds();
             return ErrorCodes.OK;
         }
         public ErrorCodes AddNewPropertyToEvent(Soundevent Event, PropertyNames propertyName)
         {
-            if (SoundeventsPropertyDefinitions.typeDictionary.TryGetValue(propertyName.ToString(), out Type t))
+            if (SoundeventsPropertyDefinitions.TypeDictionary.TryGetValue(propertyName.ToString(), out Type t))
             {
                 return Event.AddProperty(new SoundeventProperty(propertyName, t));
 

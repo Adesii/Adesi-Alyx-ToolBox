@@ -50,7 +50,7 @@
                 mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
                 IsEditable="True"
                 ItemsSource="{Binding properties, ElementName=page}"
-                TouchDown="BaseEvent_TouchDown" />
+                />
         </DataTemplate>
         <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
     </Page.Resources>
@@ -81,7 +81,7 @@
             mah:TextBoxHelper.WatermarkAlignment="Center"
             IsEditable="True"
             SelectionChanged="SoundeventName_Selected"
-            TouchDown="SoundEvenName_TouchDown" />
+            />
         <ComboBox
             x:Name="BaseSoundeventName"
             Grid.Row="1"
@@ -94,7 +94,7 @@
             mah:TextBoxHelper.WatermarkAlignment="Center"
             mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
             IsEditable="True"
-            TouchDown="BaseEvent_TouchDown" />
+             />
         <Button
             Grid.RowSpan="2"
             Grid.Column="4"
@@ -160,7 +160,7 @@
                             <ComboBox
                                 DisplayMemberPath="Key"
                                 IsEditable="True"
-                                ItemsSource="{Binding TypeDictionary}"
+                                ItemsSource="{Binding TypeDictionary, ElementName=page}"
                                 SelectionChanged="TypeSelectionChanged"
                                 Text="{Binding TypeName}" />
 
