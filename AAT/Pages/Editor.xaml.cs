@@ -12,6 +12,9 @@ using System.Linq;
 using System.Windows.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Globalization;
+using static AAT.Soundevents.SoundeventsPropertyDefinitions;
+using System.Collections;
 
 namespace AAT.Pages
 {
@@ -35,10 +38,11 @@ namespace AAT.Pages
         public ObservableCollection<SoundeventProperty> properties = new();
 
         public ObservableCollection<string> ValueTypes { get => vt; }
-        private ObservableCollection<string> vt = new ObservableCollection<string>();
+        private ObservableCollection<string> vt = new ();
 
+        public static SortedDictionary<string, EventTypeStruct> TypeDictionary => SoundeventsPropertyDefinitions.TypeDictionary;
 
-        public SortedDictionary<string, Type> TypeDictionary { get => SoundeventsPropertyDefinitions.TypeDictionary; }
+        public IEnumerable Stuff => ComboBoxAddItem.ItemsSource;
 
 
         public Editor()
@@ -223,6 +227,9 @@ namespace AAT.Pages
         private void ComboBoxAddItem_Loaded(object sender, EventArgs e)
         {
             ComboBoxAddItem.ItemsSource = SoundeventsPropertyDefinitions.TypeDictionary;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ComboBoxAddItem.ItemsSource);
+            PropertyGroupDescription descriptor = new("Value.Group");
+            view.GroupDescriptions.Add(descriptor);
         }
 
 

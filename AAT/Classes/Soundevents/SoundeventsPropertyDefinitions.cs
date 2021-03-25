@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace AAT.Soundevents
 {
-    class SoundeventsPropertyDefinitions
+    public static class SoundeventsPropertyDefinitions
     {
-        public static SoundeventsPropertyDefinitions Instance = new SoundeventsPropertyDefinitions();
 
-        private static SortedDictionary<string, Type> m_typeDictionary;
-        public static SortedDictionary<string, Type> TypeDictionary
+        private static SortedDictionary<string, EventTypeStruct> m_typeDictionary;
+        public static SortedDictionary<string, EventTypeStruct> TypeDictionary
         {
             get
             {
@@ -22,6 +21,50 @@ namespace AAT.Soundevents
             set
             {
                 m_typeDictionary = value;
+            }
+        }
+        public struct EventTypeStruct
+        {
+            private string m_name;
+            private string m_group;
+            private Type m_type;
+
+            public Type Type
+            {
+                get
+                {
+                    return m_type;
+                }
+                set
+                {
+                    m_type = value;
+                }
+            }
+            public string Name
+            {
+                get
+                {
+                    return m_name;
+                }
+                set
+                {
+                    m_name = value;
+                    Group = value;
+                }
+            }
+            public string Group
+            {
+                get
+                {
+                    return m_group;
+                }
+                set
+                {
+
+                    if (!value.Contains("_", StringComparison.CurrentCulture)) m_group = value;
+                    else
+                        m_group = value.Substring(0, value.IndexOf("_"));
+                }
             }
         }
     }

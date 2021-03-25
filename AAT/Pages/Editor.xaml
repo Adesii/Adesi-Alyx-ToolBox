@@ -49,8 +49,7 @@
                 mah:TextBoxHelper.WatermarkAlignment="Center"
                 mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
                 IsEditable="True"
-                ItemsSource="{Binding properties, ElementName=page}"
-                />
+                ItemsSource="{Binding properties, ElementName=page}" />
         </DataTemplate>
         <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
     </Page.Resources>
@@ -80,8 +79,7 @@
             mah:TextBoxHelper.Watermark="Soundevent Name"
             mah:TextBoxHelper.WatermarkAlignment="Center"
             IsEditable="True"
-            SelectionChanged="SoundeventName_Selected"
-            />
+            SelectionChanged="SoundeventName_Selected" />
         <ComboBox
             x:Name="BaseSoundeventName"
             Grid.Row="1"
@@ -93,8 +91,7 @@
             mah:TextBoxHelper.Watermark="None"
             mah:TextBoxHelper.WatermarkAlignment="Center"
             mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
-            IsEditable="True"
-             />
+            IsEditable="True" />
         <Button
             Grid.RowSpan="2"
             Grid.Column="4"
@@ -160,9 +157,28 @@
                             <ComboBox
                                 DisplayMemberPath="Key"
                                 IsEditable="True"
-                                ItemsSource="{Binding TypeDictionary, ElementName=page}"
+                                ItemsSource="{Binding Stuff, ElementName=page}"
                                 SelectionChanged="TypeSelectionChanged"
-                                Text="{Binding TypeName}" />
+                                Text="{Binding TypeName}">
+                                <ComboBox.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.ContainerStyle>
+                                            <Style TargetType="{x:Type GroupItem}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <Expander Header="{Binding Name}">
+                                                                <ItemsPresenter />
+                                                            </Expander>
+
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </GroupStyle.ContainerStyle>
+                                    </GroupStyle>
+                                </ComboBox.GroupStyle>
+                            </ComboBox>
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -194,11 +210,28 @@
             Margin="10"
             DisplayMemberPath="Key"
             IsEditable="True"
-            IsReadOnly="True"
-            ItemsSource="{Binding TypeDictionary, ElementName=page}"
             KeyUp="ComboBoxAddItem_KeyDown"
             Loaded="ComboBoxAddItem_Loaded"
-            SelectionChanged="ComboBoxAddItem_SelectionChanged" />
+            SelectionChanged="ComboBoxAddItem_SelectionChanged">
+            <ComboBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Expander Header="{Binding Name}">
+                                            <ItemsPresenter />
+                                        </Expander>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </ComboBox.GroupStyle>
+        </ComboBox>
         <Label
             Grid.Row="3"
             Width="140"
@@ -207,7 +240,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Add New Type: " />
-        
+
 
     </Grid>
 </Page>

@@ -126,9 +126,9 @@ namespace AAT.Soundevents
         }
         public ErrorCodes AddNewPropertyToEvent(Soundevent Event, PropertyNames propertyName)
         {
-            if (SoundeventsPropertyDefinitions.TypeDictionary.TryGetValue(propertyName.ToString(), out Type t))
+            if (SoundeventsPropertyDefinitions.TypeDictionary.TryGetValue(propertyName.ToString(),out SoundeventsPropertyDefinitions.EventTypeStruct t))
             {
-                return Event.AddProperty(new SoundeventProperty(propertyName, t));
+                return Event.AddProperty(new SoundeventProperty(propertyName, t.Type));
 
             }
             return Event.AddProperty(new SoundeventProperty(propertyName.ToString()));
