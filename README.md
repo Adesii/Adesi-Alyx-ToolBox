@@ -19,7 +19,6 @@ This App Allows to Edit Soundevents files in your Addons using a GUI
 
 - Everything
 - making it actual Usable
-- Loading Addon files
 - Saving vsndevts files
 - detecting type of Value to dynamically change
 - refactor Code to be actually good and not garbage and twisted
@@ -27,6 +26,3 @@ This App Allows to Edit Soundevents files in your Addons using a GUI
 ### Nice to have:
 - allowing commenting
 - allowing notes
-
-#
-#### pls be nice to me.
