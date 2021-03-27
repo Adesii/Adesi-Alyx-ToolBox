@@ -41,24 +41,34 @@
             GridLinesVisibility="Horizontal"
             SelectedIndex="0">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="*" Header="Caption">
+                <DataGridTemplateColumn
+                    Width="*"
+                    Header="Caption"
+                    SortMemberPath="GetRealName">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding GetRealName, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn MinWidth="100" Header="Character">
+                <DataGridTemplateColumn
+                    MinWidth="100"
+                    Header="Character"
+                    SortMemberPath="GetMetaCharacter">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding GetMetaCharacter, Mode=OneWay}" />
+                            <TextBlock
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Grid.IsSharedSizeScope="True"
+                                Text="{Binding GetMetaCharacter, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="*" Header="Text">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding GetClearerText, Mode=OneWay}" />
+                            <TextBlock Padding="50,0,0,0" Text="{Binding GetClearerText, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
