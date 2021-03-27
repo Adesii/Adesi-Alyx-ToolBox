@@ -11,8 +11,8 @@ namespace AAT.Soundevents
     {
         public Soundevent(string SoundeventName, Addons.Addon ownAddon = null, string baseEvent = null, string FileName = "base")
         {
-            EventName = SoundeventName;
-            Hash = ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(SoundeventName));
+            EventName = SoundeventName.Trim().ToLower().Replace(" ","");
+            Hash = ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(EventName));
             BaseEvent = baseEvent;
             Addon = ownAddon;
             this.FileName = FileName;

@@ -17,7 +17,9 @@ namespace AAT.Addons
         public string Path = "/";
         private bool refreshList = false;
 
-        public ObservableCollection<SoundeventFile> AddonSpecificAddonFiles = new ObservableCollection<SoundeventFile>();
+        public ResourceManifest manifest;
+
+        public Dictionary<string,SoundeventFile> AddonSpecificAddonFiles = new ();
         private ObservableCollection<Soundevent> m_soundevents;
         public ObservableCollection<Soundevent> AllSoundevents
         {
@@ -28,7 +30,7 @@ namespace AAT.Addons
                     m_soundevents = new ObservableCollection<Soundevent>();
                     foreach (var item in AddonSpecificAddonFiles)
                     {
-                        foreach (var events in item.Soundevents)
+                        foreach (var events in item.Value.Soundevents)
                         {
                             m_soundevents.Add(events);
                         }
@@ -45,6 +47,12 @@ namespace AAT.Addons
             AddonName = path[(path.LastIndexOf("\\") + 1)..];
             OnlySoundeventsFolder = onlySoundeventsFolder;
             Path = path;
+            manifest = TryGetManifestorCreate();
+        }
+
+        public ResourceManifest TryGetManifestorCreate()
+        {
+            return new ResourceManifest(this);
         }
         public override string ToString()
         {
@@ -52,18 +60,13 @@ namespace AAT.Addons
         }
         public void ApplyChanges()
         {
-
+            manifest.Files = AddonSpecificAddonFiles.Values.ToList();
+            manifest.SaveFile();
         }
         public void AddNewSoundEvent(Soundevent soundevent)
         {
-            foreach (var item in AddonSpecificAddonFiles)
-            {
-                if (item.FileName.Equals(soundevent.FileName))
-                {
-                    item.Soundevents.Add(soundevent);
-                }
-            }
-            AddonSpecificAddonFiles.Add(new SoundeventFile(soundevent.FileName));
+            if (!AddonSpecificAddonFiles.ContainsKey(soundevent.FileName)) AddonSpecificAddonFiles[soundevent.FileName] = new SoundeventFile(soundevent.FileName);
+            AddonSpecificAddonFiles[soundevent.FileName].Soundevents.Add(soundevent);
         }
     }
 }

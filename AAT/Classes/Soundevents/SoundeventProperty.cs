@@ -42,7 +42,7 @@ namespace AAT.Soundevents
         {
             this.typeName = typeName;
             this.disAs = t;
-            this.value = v??"";
+            this.value = v;
         }
 
         public static EventDisplays getDisplayType(string val)

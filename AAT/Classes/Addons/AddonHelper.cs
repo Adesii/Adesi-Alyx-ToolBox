@@ -48,9 +48,9 @@ namespace AAT.Addons
         public static IEnumerable<Soundevent> Deserialize(string data)  //Change to data instead (no file opening).
         {
             List<Soundevent> events = new List<Soundevent>();
-            
+
             List<string> Lines = new List<string>();
-            
+
             bool propertyOpen = false;
 
             string[] AllLines = data.Replace("\n", string.Empty).Split('\r');
@@ -230,10 +230,10 @@ namespace AAT.Addons
             sb.AppendLine("{");
             foreach (var soundevent in soundevents)
             {
-                sb.Append("\t\"");
+                sb.Append("\t");
 
                 sb.Append(soundevent.EventName);
-                sb.AppendLine("\" = ");
+                sb.AppendLine(" = ");
                 sb.AppendLine("\t{");
                 foreach (var property in soundevent.Properties)
                 {
@@ -253,7 +253,7 @@ namespace AAT.Addons
                     }
                     else
                     {
-                        if(property.DisAs  == EventDisplays.StringValue )
+                        if (property.DisAs == EventDisplays.StringValue)
                         {
                             sb.Append("\"");
                         }

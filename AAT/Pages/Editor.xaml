@@ -23,10 +23,10 @@
                 VerticalContentAlignment="Stretch"
                 Interval="0.1"
                 NumericInputMode="All"
-                ParsingNumberStyle="AllowDecimalPoint"
-                StringFormat="N3"
+                ParsingNumberStyle="AllowThousands"
+                StringFormat="g3"
                 TextAlignment="Center"
-                Value="{Binding Value}" />
+                Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="TextTemplate">
             <TextBox
@@ -48,8 +48,10 @@
                 mah:TextBoxHelper.Watermark="None"
                 mah:TextBoxHelper.WatermarkAlignment="Center"
                 mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
+                DisplayMemberPath="EventName"
                 IsEditable="True"
-                ItemsSource="{Binding properties, ElementName=page}" />
+                ItemsSource="{Binding SoundeventList, ElementName=page}"
+                Loaded="EventPicker_Loaded" />
         </DataTemplate>
         <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
     </Page.Resources>
@@ -240,6 +242,14 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Add New Type: " />
+        <Button
+            Grid.Row="3"
+            Grid.Column="4"
+            Margin="10,10,10,10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Click="Button_Click_2"
+            Content="Button" />
 
 
     </Grid>

@@ -111,7 +111,7 @@ namespace AAT.Soundevents
             if (basevent != null)
             {
                 se = new Soundevent(name,AddonManager.CurrentAddon, basevent);
-                se.AddProperty(new SoundeventProperty("base", EventDisplays.SoundeventPicker));
+                se.AddProperty(new SoundeventProperty("base", EventDisplays.SoundeventPicker,basevent));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }
             else

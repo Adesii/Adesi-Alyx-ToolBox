@@ -44,6 +44,8 @@ namespace AAT
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
+            Properties.Settings.Default.LastSelectedAddon = AddonManager.CurrentAddon.AddonName;
+            Properties.Settings.Default.Save();
             Windows.Cheatsheet.Instance?.Close();
         }
 

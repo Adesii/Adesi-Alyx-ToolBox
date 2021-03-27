@@ -37,6 +37,8 @@ namespace AAT.Pages
 
         public ObservableCollection<SoundeventProperty> properties = new();
 
+        public ObservableCollection<Soundevent> SoundeventList => builder.AllSoundEvents;
+
         public ObservableCollection<string> ValueTypes { get => vt; }
         private ObservableCollection<string> vt = new ();
 
@@ -232,9 +234,18 @@ namespace AAT.Pages
             view.GroupDescriptions.Add(descriptor);
         }
 
+        private void EventPicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox s = sender as ComboBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            Debug.WriteLine(name?.Value);
+            s.SelectedItem = builder.AllSoundEvents.Single((e)=> { return e.EventName.Equals(name.Value); }); 
+        }
 
-
-
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            AddonManager.CurrentAddon.ApplyChanges();
+        }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {
@@ -244,22 +255,26 @@ namespace AAT.Pages
             {
 
                 SoundeventProperty soundeventProperty = item as SoundeventProperty;
+                DataTemplate Template;
                 switch (soundeventProperty.DisAs)
                 {
                     case EventDisplays.FloatValue:
-                        return element.FindResource("FloatTemplate") as DataTemplate;
+                        Template = element.FindResource("FloatTemplate") as DataTemplate;
+                        break;
                     case EventDisplays.SoundeventPicker:
-                        return element.FindResource("EventPicker") as DataTemplate;
+                        Template = element.FindResource("EventPicker") as DataTemplate;
+                        break;
                     case EventDisplays.ArrayValue:
-                        return element.FindResource("TextTemplate") as DataTemplate;
-
+                        Template = element.FindResource("TextTemplate") as DataTemplate;
+                        break;
                     case EventDisplays.StringValue:
-                        return element.FindResource("TextTemplate") as DataTemplate;
+                        Template = element.FindResource("TextTemplate") as DataTemplate;
+                        break;
                     default:
-                        return element.FindResource("TextTemplate") as DataTemplate;
-
+                        Template = element.FindResource("TextTemplate") as DataTemplate;
+                        break;
                 }
-
+                return Template;
             }
             return base.SelectTemplate(item, container);
         }

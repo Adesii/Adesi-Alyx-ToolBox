@@ -4,13 +4,30 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace AAT.Addons
 {
     public static class AddonManager
     {
         public static Action AddonChanged;
-        public static Addon CurrentAddon = new Addon("/");
+        private static Addon m_currAddon;
+        public static Addon CurrentAddon
+        {
+            get
+            {
+                if (m_currAddon == null)
+                {
+                    m_currAddon = Addons.FirstOrDefault((e) => { return e.AddonName.Equals(Properties.Settings.Default.LastSelectedAddon); });
+                    if(m_currAddon == null)m_currAddon = Addons[0];
+                }
+                return m_currAddon;
+            }
+            set
+            {
+                m_currAddon = value;
+            }
+        }
         public static int CurrentFileIndex = 0;
 
         public static ObservableCollection<Addon> Addons
@@ -19,7 +36,7 @@ namespace AAT.Addons
             {
                 if (addons == null)
                 {
-                    addons = addons = new ObservableCollection<Addon>(GetAddons(true));
+                    addons = addons = new ObservableCollection<Addon>(GetAddons(false));
                 }
                 return addons;
 
