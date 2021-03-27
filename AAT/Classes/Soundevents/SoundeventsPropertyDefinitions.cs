@@ -23,7 +23,7 @@ namespace AAT.Soundevents
                 m_typeDictionary = value;
             }
         }
-        public struct EventTypeStruct
+        public class EventTypeStruct
         {
             private string m_name;
             private string m_group;

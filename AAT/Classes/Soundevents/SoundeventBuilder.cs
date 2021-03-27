@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HLACaptionReplacer;
+using AAT.CloseCaptions;
 
 namespace AAT.Soundevents
 {
@@ -50,7 +52,10 @@ namespace AAT.Soundevents
         public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
 
 
-        private Dictionary<options, Func<Soundevent,bool>> lastButtonState = new();
+        public static Dictionary<uint, Soundevent> SoundeventDictionary = new();
+        public static Dictionary<string, LanguageCaption> CaptionDictionary = new();
+
+
         enum options
         {
             onlyAddon,
@@ -73,6 +78,7 @@ namespace AAT.Soundevents
             {
                 AllSoundEvents.Add(item);
                 AllBaseSoundEvents.Add(item);
+                SoundeventDictionary[item.Hash] = item;
             }
         }
         public void SwitchOnlyAddons(bool state)
@@ -121,6 +127,7 @@ namespace AAT.Soundevents
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
             }
             AddonBasedEvents.Add(se);
+            AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary[se.Hash] = se;
             Editor.Instance.SoundeventName.SelectedItem = se;
             return ErrorCodes.OK;
         }

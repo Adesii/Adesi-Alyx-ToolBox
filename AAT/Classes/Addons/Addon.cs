@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Linq;
+using AAT.CloseCaptions;
 
 namespace AAT.Addons
 {
@@ -17,7 +18,7 @@ namespace AAT.Addons
         public string Path = "/";
         private bool refreshList = false;
 
-        public ResourceManifest manifest;
+        public ResourceManifest Manifest;
 
         public Dictionary<string,SoundeventFile> AddonSpecificAddonFiles = new ();
         private ObservableCollection<Soundevent> m_soundevents;
@@ -41,13 +42,27 @@ namespace AAT.Addons
             }
         }
 
+        public static Dictionary<string, LanguageCaption> AvailableCloseCaptions
+        {
+            get
+            {
+                return AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.Concat(SoundeventBuilder.CaptionDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
 
+        public static Dictionary<uint, Soundevent> AvailableSoundeventDictionary 
+        {
+            get
+            {
+                return AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.Concat(SoundeventBuilder.SoundeventDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value); ;
+            }
+        }
         public Addon(string path, bool onlySoundeventsFolder = false)
         {
             AddonName = path[(path.LastIndexOf("\\") + 1)..];
             OnlySoundeventsFolder = onlySoundeventsFolder;
             Path = path;
-            manifest = TryGetManifestorCreate();
+            Manifest = TryGetManifestorCreate();
         }
 
         public ResourceManifest TryGetManifestorCreate()
@@ -60,8 +75,8 @@ namespace AAT.Addons
         }
         public void ApplyChanges()
         {
-            manifest.Files = AddonSpecificAddonFiles.Values.ToList();
-            manifest.SaveFile();
+            Manifest.Files = AddonSpecificAddonFiles.Values.ToList();
+            Manifest.SaveFile();
         }
         public void AddNewSoundEvent(Soundevent soundevent)
         {

@@ -8,39 +8,50 @@ using HLACaptionReplacer;
 using System.Linq;
 using System.Diagnostics;
 
-namespace AAT.Classes.CloseCaptions
+namespace AAT.CloseCaptions
 {
     public class LanguageCaption : IComparable
     {
         public string language { get; set; }
         public ClosedCaptions captionFile;
 
-        private ObservableCollection<CaptionSoundevent> m_structing;
-        public bool isCompiling = false;
-        public ObservableCollection<CaptionSoundevent> CaptionStruct
+        private List<ClosedCaptionWrapperClass> ConvertedList;
+        public List<ClosedCaptionWrapperClass> GetCaptions
         {
             get
             {
-                if (m_structing == null || m_structing.Count <= 0 && !isCompiling)
+                if(ConvertedList == null)
                 {
-                    FillCombineStruct();
-                    isCompiling = true;
+                    List<ClosedCaptionWrapperClass> c = new();
+                    captionFile.Captions.ForEach((item) =>
+                    {
+                        c.Add(new ClosedCaptionWrapperClass(item));
+                    });
+                    ConvertedList = c;
                 }
-                return m_structing;
-            }
-            set
-            {
-                m_structing.Clear();
-                m_structing = value;
+                return ConvertedList;
             }
         }
 
-        public struct CaptionSoundevent
+        private Dictionary<uint, ClosedCaption> m_captionsByHash;
+        public Dictionary<uint, ClosedCaption> CaptionsByHash
         {
-            public LanguageCaption LanguageCaption { get; set; }
-            public ClosedCaption Caption { get; set; }
-            public Soundevents.Soundevent Event { get; set; }
-
+            get
+            {
+                if(m_captionsByHash == null)
+                {
+                    m_captionsByHash = new();
+                    foreach (var item in captionFile.Captions)
+                    {
+                        m_captionsByHash.Add(item.SoundEventHash,item);
+                    }
+                }
+                return m_captionsByHash;
+            }
+            set
+            {
+                m_captionsByHash = value;
+            }
         }
 
         public LanguageCaption(string Language)
@@ -49,50 +60,6 @@ namespace AAT.Classes.CloseCaptions
         }
         public void RefreshCaptions()
         {
-
-        }
-
-        private async void FillCombineStruct()
-        {
-            List<string> foundHashes = new();
-            List<CaptionSoundevent> b = new();
-            await Task.Run(() =>
-            {
-
-                foreach (var item in captionFile.Captions)
-                {
-                    var caption_found = false;
-
-                    Soundevents.SoundeventBuilder.Instance.AllBaseSoundEvents.AsParallel().ForAll((e) =>
-                    {
-                        if (item.SoundEventHash == e.Hash)
-                        {
-                            b.Add(new CaptionSoundevent()
-                            {
-                                LanguageCaption = this,
-                                Caption = item,
-                                Event = e
-
-                            });
-                            caption_found = true;
-                        }
-                    });
-                    if (!caption_found)
-                        b.Add(new CaptionSoundevent()
-                        {
-                            LanguageCaption = this,
-                            Caption = item,
-                            Event = new Soundevents.Soundevent(item.SoundEventHash.ToString())
-
-                        }) ;
-
-                }
-
-                
-            });
-            m_structing = new ObservableCollection<CaptionSoundevent>(b);
-            Pages.CaptionEditor.Instance.SetSource();
-            Debug.WriteLine($"Done Switching Language to : {language}");
 
         }
         public int CompareTo(object obj)

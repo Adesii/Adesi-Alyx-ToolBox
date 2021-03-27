@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ValveResourceFormat.Serialization.KeyValues;
+using HLACaptionReplacer;
+using AAT.CloseCaptions;
 
 namespace AAT.Soundevents
 {
@@ -12,7 +14,6 @@ namespace AAT.Soundevents
         public Soundevent(string SoundeventName, Addons.Addon ownAddon = null, string baseEvent = null, string FileName = "base")
         {
             EventName = SoundeventName.Trim().ToLower().Replace(" ","");
-            Hash = ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(EventName));
             BaseEvent = baseEvent;
             Addon = ownAddon;
             this.FileName = FileName;
@@ -22,8 +23,9 @@ namespace AAT.Soundevents
             }
         }
 
-        public uint Hash { get; set; }
-        public string EventName { get; }
+        public uint Hash { get=> ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(EventName)); }
+        private string m_eventName;
+        public string EventName { get => m_eventName; set => m_eventName = value; }
 
         private string meta = "";
         public string GetMeta
@@ -31,7 +33,7 @@ namespace AAT.Soundevents
             get
             {
                 if (string.IsNullOrWhiteSpace(meta)) {
-                    var b = (KVObject)GetProperty("metadata")?.Value;
+                    var b = (ValveResourceFormat.Serialization.KeyValues.KVObject)(GetProperty("metadata")?.Value);
                     meta = b==null? "":b.Properties["1"].Value.ToString();
                 }
                 return meta ?? "";
@@ -45,13 +47,16 @@ namespace AAT.Soundevents
 
                 var t = GetProperty("line_text");
                 if (t != null)
+                {
                     return t.Value.ToString();
-                else return Caption.Definition;
+                }
+                else 
+                    return "";
             }
         }
         public string FileName { get; private set; }
         public string BaseEvent { get; }
-        public HLACaptionReplacer.ClosedCaption Caption { get; set; }
+        public ClosedCaption Caption { get=>Addons.Addon.AvailableCloseCaptions[CloseCaptionManager.CurrLang]?.CaptionsByHash?[Hash]; }
         public Addons.Addon Addon { get; }
         public List<SoundeventProperty> Properties { get; set; } = new List<SoundeventProperty>();
 

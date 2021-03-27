@@ -71,7 +71,7 @@ namespace AAT
 
             }
             _ = Soundevents.SoundeventBuilder.Instance;
-            Classes.CloseCaptions.CloseCaptionManager.LoadCaptions();
+            CloseCaptions.CloseCaptionManager.LoadCaptions(true);
         }
 
         

@@ -12,9 +12,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AAT.Addons;
-using AAT.Classes.CloseCaptions;
+using AAT.CloseCaptions;
 using AAT.Windows;
 using AAT.Soundevents;
+using System.Linq;
 
 namespace AAT.Pages
 {
@@ -53,9 +54,9 @@ namespace AAT.Pages
         }
         public void SetSource()
         {
-            CaptionEditorView.ItemsSource = CloseCaptionManager.LanguageSpecificCaptions.CaptionStruct;
-            CustomCaptions.ItemsSource = CloseCaptionManager.AddonSpecificCaptions.Values;
-            CustomCaptions.SelectedItem = CloseCaptionManager.AddonSpecificCaptions[CloseCaptionManager.CurrLang];
+            CaptionEditorView.ItemsSource = CloseCaptionManager.LanguageSpecificCaptions.GetCaptions;
+            CustomCaptions.ItemsSource = Addon.AvailableCloseCaptions.Values;
+            CustomCaptions.SelectedItem = Addon.AvailableCloseCaptions[CloseCaptionManager.CurrLang];
             CaptionCount.Text = $"Count: {CaptionEditorView.Items.Count}";
 
 

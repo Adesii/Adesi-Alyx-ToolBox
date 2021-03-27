@@ -35,8 +35,7 @@ namespace AAT.Soundevents
                 pakr.Read(Properties.Settings.Default.InstallPath + "/game/hlvr/pak01_dir.vpk");
                 foreach (var item in pakr.Entries["vsndevts_c"])
                 {
-                    Soundevent se = null;
-                    List<SoundeventProperty> propss = new List<SoundeventProperty>();
+                    
 
                     pakr.ReadEntry(item, out byte[] b, false);
                     var res = new Resource();
@@ -45,7 +44,8 @@ namespace AAT.Soundevents
                     KV3File file = ((BinaryKV3)res.DataBlock).GetKV3File();
                     foreach (var obb in file.Root)
                     {
-                        se = new Soundevent(obb.Key);
+                        List<SoundeventProperty> propss = new();
+                        Soundevent se = new(obb.Key);
                         foreach (var inobb in ((KVObject)obb.Value))
                         {
                             SoundeventsPropertyDefinitions.TypeDictionary.TryAdd(inobb.Key,new SoundeventsPropertyDefinitions.EventTypeStruct() {Name = inobb.Key,Type=inobb.Value.GetType() });

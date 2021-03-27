@@ -21,4 +21,4 @@ Legend:
 | \<norepeat_global[:Number]>| Defines the Caption to not repeat globally | \<sfx>\<norepeat_global:5>[Shuffling in Ceiling Vents]
 | \<force>| ...... | \<force>\<delay:10.5>\<clr:18,199,226>Alyx? You there?\<cr>Hey, Alyx! It's us!
 | \<delay:Number>| Delays the Display of the caption by specified Decimal number | \<force>\<delay:10.5>\<clr:18,199,226>Alyx? You there?\<cr>Hey, Alyx! It's us!
-
+| \<wait:Numer> | Delays a certain section of Caption |
