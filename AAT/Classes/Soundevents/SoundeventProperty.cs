@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Soundevents
 {
@@ -18,7 +19,7 @@ namespace AAT.Soundevents
     {
         private string typeName;
         private Type type;
-        private string value;
+        private object value;
         private EventDisplays disAs;
 
         public SoundeventProperty(PropertyNames PropertyName,Type property)
@@ -26,10 +27,10 @@ namespace AAT.Soundevents
             this.typeName = PropertyName.ToString();
             this.type = property;
         }
-        public SoundeventProperty(string typeName,string v)
+        public SoundeventProperty(string typeName,object v)
         {
             this.typeName = typeName;
-            this.disAs = getDisplayType(v);
+            this.disAs = getDisplayType(v.ToString());
             this.value = v;
         }
         public SoundeventProperty(string typeName, Type type)
@@ -37,11 +38,11 @@ namespace AAT.Soundevents
             this.typeName = typeName;
             this.type = type;
         }
-        public SoundeventProperty(string typeName,EventDisplays t = EventDisplays.StringValue, string v = "")
+        public SoundeventProperty(string typeName,  EventDisplays t = EventDisplays.StringValue,object v = null)
         {
             this.typeName = typeName;
             this.disAs = t;
-            this.value = v;
+            this.value = v??"";
         }
 
         public static EventDisplays getDisplayType(string val)
@@ -60,7 +61,7 @@ namespace AAT.Soundevents
         }
 
         public string TypeName { get => typeName; set => typeName = value; }
-        public string Value { get => value; set => this.value = value; }
+        public object Value { get => value; set => this.value = value; }
         public Type Type { get => type; set => type = value; }
         public EventDisplays DisAs { get => disAs; set => disAs = value; }
 

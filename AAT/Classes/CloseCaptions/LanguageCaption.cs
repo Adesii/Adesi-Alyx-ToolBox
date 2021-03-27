@@ -61,17 +61,30 @@ namespace AAT.Classes.CloseCaptions
 
                 foreach (var item in captionFile.Captions)
                 {
+                    var caption_found = false;
 
                     Soundevents.SoundeventBuilder.Instance.AllBaseSoundEvents.AsParallel().ForAll((e) =>
                     {
-                        if (item.SoundEventHash == e.Hash) b.Add(new CaptionSoundevent()
+                        if (item.SoundEventHash == e.Hash)
+                        {
+                            b.Add(new CaptionSoundevent()
+                            {
+                                LanguageCaption = this,
+                                Caption = item,
+                                Event = e
+
+                            });
+                            caption_found = true;
+                        }
+                    });
+                    if (!caption_found)
+                        b.Add(new CaptionSoundevent()
                         {
                             LanguageCaption = this,
                             Caption = item,
-                            Event = e
+                            Event = new Soundevents.Soundevent(item.SoundEventHash.ToString())
 
-                        });
-                    });
+                        }) ;
 
                 }
 

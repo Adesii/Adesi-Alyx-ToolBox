@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Soundevents
 {
@@ -23,14 +24,28 @@ namespace AAT.Soundevents
 
         public uint Hash { get; set; }
         public string EventName { get; }
+
+        private string meta = "";
+        public string GetMeta
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(meta)) {
+                    var b = (KVObject)GetProperty("metadata")?.Value;
+                    meta = b==null? "":b.Properties["1"].Value.ToString();
+                }
+                return meta ?? "";
+            }
+        }
+
         public string LineText
         {
             get
             {
 
-                var t = GetProperty(new SoundeventProperty("line_text"));
+                var t = GetProperty("line_text");
                 if (t != null)
-                    return t.Value;
+                    return t.Value.ToString();
                 else return Caption.Definition;
             }
         }
@@ -38,13 +53,24 @@ namespace AAT.Soundevents
         public string BaseEvent { get; }
         public HLACaptionReplacer.ClosedCaption Caption { get; set; }
         public Addons.Addon Addon { get; }
-        public List<SoundeventProperty> Properties { get; } = new List<SoundeventProperty>();
+        public List<SoundeventProperty> Properties { get; set; } = new List<SoundeventProperty>();
 
         public SoundeventProperty GetProperty(SoundeventProperty property)
         {
             foreach (var item in Properties)
             {
-                if (item.TypeName == property.TypeName)
+                if (item.TypeName.Equals(property.TypeName))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        public SoundeventProperty GetProperty(string propertyName)
+        {
+            foreach (var item in Properties)
+            {
+                if (item.TypeName.Equals(propertyName))
                 {
                     return item;
                 }

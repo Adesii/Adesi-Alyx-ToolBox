@@ -52,15 +52,16 @@ namespace AAT.Soundevents
                             switch (inobb.Key)
                             {
                                 case "base":
-                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value));
                                     break;
                                 default:
-                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.StringValue, inobb.Value.ToString()));
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.StringValue, inobb.Value));
                                     break;
                             }
 
                             //Debug.Print(inobb.Value.ToString());
                         }
+                        se.Properties = propss;
                         soundevents.Add(se);
                         //Debug.Print("");
                     }
