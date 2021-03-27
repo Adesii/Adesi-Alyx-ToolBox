@@ -23,8 +23,7 @@
                 VerticalContentAlignment="Stretch"
                 Interval="0.1"
                 NumericInputMode="All"
-                ParsingNumberStyle="AllowThousands"
-                StringFormat="g3"
+                StringFormat="f3"
                 TextAlignment="Center"
                 Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>

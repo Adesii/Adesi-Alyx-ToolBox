@@ -8,6 +8,7 @@ namespace AAT.Addons
 {
     public static class AddonHelper
     {
+        public const int NUMBEROF0 = 5;
         static string[] GetAddons(string AlyxInstallFolder)
         {
             string path = System.IO.Path.Combine(AlyxInstallFolder, "content", "hlvr_addons");
@@ -257,7 +258,18 @@ namespace AAT.Addons
                         {
                             sb.Append("\"");
                         }
-                        sb.Append(property.Value);
+                        switch (property.DisAs)
+                        {
+                            case EventDisplays.FloatValue:
+                                sb.Append((float.Parse(property.Value.ToString())).ToString("0.00##").Replace(",", "."));
+                                break;
+                            case EventDisplays.SoundeventPicker:
+                            case EventDisplays.StringValue:
+                            case EventDisplays.TypePicker:
+                            default:
+                                sb.Append(property.Value);
+                                break;
+                        }
                         if (property.DisAs == EventDisplays.StringValue)
                         {
                             sb.AppendLine("\"");
