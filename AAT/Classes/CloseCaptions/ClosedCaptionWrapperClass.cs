@@ -43,7 +43,12 @@ namespace AAT.CloseCaptions
             get
             {
                 if (CloseCaptionManager.CurrLang == "english" && Addon.AvailableSoundeventDictionary.TryGetValue(Parent.SoundEventHash, out Soundevent v))
-                    return v.LineText;
+                {
+                    var text = v.LineText;
+                    if (!string.IsNullOrWhiteSpace(text))
+                        return text;
+                }
+                    
                 return Parent.Definition;
             }
         }
