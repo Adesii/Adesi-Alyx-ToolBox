@@ -13,7 +13,7 @@ namespace AAT.Soundevents
     {
         public Soundevent(string SoundeventName, Addons.Addon ownAddon = null, string baseEvent = null, string FileName = "base")
         {
-            EventName = SoundeventName.Trim().ToLower().Replace(" ","");
+            EventName = SoundeventName.Trim().ToLower().Replace(" ", "");
             BaseEvent = baseEvent;
             Addon = ownAddon;
             this.FileName = FileName;
@@ -23,7 +23,7 @@ namespace AAT.Soundevents
             }
         }
 
-        public uint Hash { get=> ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(EventName)); }
+        public uint Hash { get => ValveResourceFormat.Crc32.Compute(System.Text.Encoding.UTF8.GetBytes(EventName)); }
         private string m_eventName;
         public string EventName { get => m_eventName; set => m_eventName = value; }
 
@@ -32,9 +32,10 @@ namespace AAT.Soundevents
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(meta)) {
+                if (string.IsNullOrWhiteSpace(meta))
+                {
                     var b = (ValveResourceFormat.Serialization.KeyValues.KVObject)(GetProperty("metadata")?.Value);
-                    meta = b==null? "":b.Properties["1"].Value.ToString();
+                    meta = b == null ? "" : b.Properties["1"].Value.ToString();
                 }
                 return meta ?? "";
             }
@@ -50,13 +51,23 @@ namespace AAT.Soundevents
                 {
                     return t.Value.ToString();
                 }
-                else 
+                else
                     return "";
             }
         }
         public string FileName { get; private set; }
         public string BaseEvent { get; }
-        public ClosedCaption Caption { get=>Addons.Addon.AvailableCloseCaptions[CloseCaptionManager.CurrLang]?.CaptionsByHash?[Hash]; }
+        public ClosedCaption Caption
+        {
+            get
+            {
+                if (Addons.Addon.AvailableCloseCaptions[CloseCaptionManager.CurrLang].CaptionsByHash.TryGetValue(Hash, out ClosedCaption vc))
+                {
+                    return vc;
+                }
+                return null;
+            }
+        }
         public Addons.Addon Addon { get; }
         public List<SoundeventProperty> Properties { get; set; } = new List<SoundeventProperty>();
 

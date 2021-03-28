@@ -59,7 +59,7 @@
                 DisplayMemberPath="Key"
                 IsEditable="True"
                 ItemsSource="{Binding Stuff, ElementName=page}"
-                SelectionChanged="TypeSelectionChanged"
+                SelectionChanged="Type_SelectionChanged"
                 Text="{Binding TypeName}">
                 <ComboBox.GroupStyle>
                     <GroupStyle>
@@ -189,7 +189,8 @@
             CanUserResizeColumns="False"
             CanUserResizeRows="False"
             CanUserSortColumns="False"
-            GridLinesVisibility="Horizontal">
+            GridLinesVisibility="Horizontal"
+            IsSynchronizedWithCurrentItem="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="*" Header="Type">
                     <DataGridTemplateColumn.CellTemplate>
@@ -198,7 +199,7 @@
                                 DisplayMemberPath="Key"
                                 IsEditable="True"
                                 ItemsSource="{Binding Stuff, ElementName=page}"
-                                SelectionChanged="TypeSelectionChanged"
+                                SelectionChanged="Type_SelectionChanged"
                                 Text="{Binding TypeName}">
                                 <ComboBox.GroupStyle>
                                     <GroupStyle>
@@ -220,13 +221,6 @@
                                 </ComboBox.GroupStyle>
                             </ComboBox>
 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn MinWidth="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding ValueTypes, ElementName=page}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

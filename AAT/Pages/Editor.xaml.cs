@@ -221,12 +221,6 @@ namespace AAT.Pages
             }
         }
 
-        private void TypeSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox b = (ComboBox)sender;
-            Debug.Print(b.Text);
-        }
-
 
         private void ComboBoxAddItem_Loaded(object sender, EventArgs e)
         {
@@ -265,15 +259,36 @@ namespace AAT.Pages
             //Debug.WriteLine(name?.Value);
             name.Value = s.SelectedItem;
         }
+
+        private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox s = sender as ComboBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            //Debug.WriteLine(name?.Value);
+            if(s.SelectedItem != null)
+            {
+                Debug.WriteLine(s.SelectedItem);
+                name.Type = ((KeyValuePair<string, EventTypeStruct>)s.SelectedItem).Value.Type;
+            }
+            else
+            {
+                name.Type = typeof(string);
+            }
+            
+        }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {
+
+        
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
+            
             if (container is FrameworkElement element && item != null)
             {
 
                 SoundeventProperty soundeventProperty = item as SoundeventProperty;
+                soundeventProperty.ValueContainer = container;
                 DataTemplate Template;
                 //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
                 switch (soundeventProperty.DisAs)
@@ -300,6 +315,11 @@ namespace AAT.Pages
                 return Template;
             }
             return base.SelectTemplate(item, container);
+        }
+
+        private void SoundeventProperty_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 

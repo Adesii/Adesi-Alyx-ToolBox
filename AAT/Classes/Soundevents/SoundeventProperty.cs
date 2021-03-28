@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Soundevents
@@ -27,15 +29,35 @@ namespace AAT.Soundevents
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private DependencyObject m_valCon;
+        public DependencyObject ValueContainer
+        {
+            get => m_valCon;
+            set
+            {
+                if(m_valCon != null) PropertyChanged -= SoundeventProperty_PropertyChanged;
+                m_valCon = value;
+                PropertyChanged += SoundeventProperty_PropertyChanged;
+            }
+        }
 
-        public SoundeventProperty(PropertyNames PropertyName,Type property)
+        private void SoundeventProperty_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+           
+            var cp = (ContentPresenter)ValueContainer;
+            var cts = cp.ContentTemplateSelector;
+            cp.ContentTemplateSelector = null;
+            cp.ContentTemplateSelector = cts;
+        }
+
+        public SoundeventProperty(PropertyNames PropertyName, Type property)
         {
             this.typeName = PropertyName.ToString();
             this.type = property;
             this.disAs = getDisplayType(property);
 
         }
-        public SoundeventProperty(string typeName,object v)
+        public SoundeventProperty(string typeName, object v)
         {
             this.typeName = typeName;
             this.disAs = getDisplayType(v);
@@ -47,7 +69,7 @@ namespace AAT.Soundevents
             this.type = type;
             this.disAs = getDisplayType(type);
         }
-        public SoundeventProperty(string typeName,  EventDisplays t = EventDisplays.StringValue,object v = null)
+        public SoundeventProperty(string typeName, EventDisplays t = EventDisplays.StringValue, object v = null)
         {
             this.typeName = typeName;
             this.disAs = t;
@@ -63,7 +85,7 @@ namespace AAT.Soundevents
         {
             EventDisplays t = EventDisplays.StringValue;
             if (val == null) return t;
-            System.Diagnostics.Debug.WriteLine(val?.ToString()+" Something or else");
+            System.Diagnostics.Debug.WriteLine(val?.ToString() + " Something or else");
             if (IsNumeric(val as Type))
             {
                 t = EventDisplays.FloatValue;
@@ -76,7 +98,7 @@ namespace AAT.Soundevents
         }
         public string TypeName { get => typeName; set { typeName = value; NotifyPropertyChanged(nameof(TypeName)); } }
         public object Value { get => value; set { this.value = value; NotifyPropertyChanged(nameof(Value)); } }
-        public Type Type { get => type; set { type = value; NotifyPropertyChanged(nameof(Type)); } }
+        public Type Type { get => type; set { type = value; disAs = getDisplayType(type); NotifyPropertyChanged(nameof(Type)); } }
         public EventDisplays DisAs { get => disAs; set { disAs = value; NotifyPropertyChanged(nameof(DisAs)); } }
 
         public static bool IsNumeric(Type type)
@@ -109,7 +131,7 @@ namespace AAT.Soundevents
 
         public void NotifyPropertyChanged(string propertyName)
         {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public override string ToString()
         {

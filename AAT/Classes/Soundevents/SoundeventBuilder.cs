@@ -46,8 +46,8 @@ namespace AAT.Soundevents
             set { m_instance = value; }
         }
 
-        public ObservableCollection<Soundevent> AllSoundEvents = new ObservableCollection<Soundevent>();
-        public ObservableCollection<Soundevent> AllBaseSoundEvents = new ObservableCollection<Soundevent>();
+        public ObservableCollection<Soundevent> AllSoundEvents = new ();
+        public ObservableCollection<Soundevent> AllBaseSoundEvents = new ();
         public ObservableCollection<Soundevent> AddonBasedEvents { get => AddonManager.CurrentAddon.AllSoundevents; }
         public ObservableCollection<SoundeventProperty> properties = new();
 
@@ -159,6 +159,7 @@ namespace AAT.Soundevents
 
         public void ShowPropertiesOfSoundevent(Soundevent se)
         {
+            Addon.RefreshDictionaries();
             properties.Clear();
             foreach (var item in se.Properties)
             {
