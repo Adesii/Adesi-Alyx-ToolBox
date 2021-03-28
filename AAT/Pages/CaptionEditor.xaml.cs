@@ -18,6 +18,11 @@ using AAT.Soundevents;
 using System.Linq;
 using System.Diagnostics;
 using HLACaptionReplacer;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Converters;
+
 namespace AAT.Pages
 {
     /// <summary>
@@ -57,6 +62,27 @@ namespace AAT.Pages
             CloseCaptionManager.LoadCaptions();
             MainWindow.ChangeTheme(Instance);
             CurrentlyViewable = true;
+
+            //List<string> compiled = new();
+            //ITraceWriter traceWriter = new MemoryTraceWriter();
+            //SoundeventBuilder.CaptionDictionary.AsParallel().ForAll((e) =>
+            //{
+            //    compiled.Add(JsonConvert.SerializeObject(e, new JsonSerializerSettings
+            //    {
+            //        TraceWriter = traceWriter,
+            //        MaxDepth = 1,
+            //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //        Error = delegate (object sender, ErrorEventArgs args)
+            //        {
+            //            args.ErrorContext.Handled = true;
+            //        }
+            //    }
+            //        ));
+            //});
+            //
+            //
+            //Debug.WriteLine(traceWriter.ToString());
+            //System.IO.File.WriteAllLinesAsync("C:/Users/kopie/Desktop/New folder/allCaption.Json", compiled);
         }
         public void SetSource()
         {
@@ -84,7 +110,7 @@ namespace AAT.Pages
             {
                 cheatsheet.Show();
                 cheatsheet.Focus();
-            } 
+            }
         }
 
         private void CustomCaptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -93,7 +119,7 @@ namespace AAT.Pages
             if (LC == null) return;
 
             CloseCaptionManager.CurrLang = LC.language;
-            
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -102,10 +128,10 @@ namespace AAT.Pages
             captionEditing = Windows.CaptionTypeEditor.Instance;
             captionEditing.Owner = MainWindow.Instance;
             Debug.WriteLine(sender.GetType());
-            if(sender.GetType()== typeof(DataGrid))
+            if (sender.GetType() == typeof(DataGrid))
             {
                 var grid = sender as DataGrid;
-                if(grid.SelectedItem == null)
+                if (grid.SelectedItem == null)
                 {
                     return;
                 }

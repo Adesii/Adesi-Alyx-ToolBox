@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 using HLACaptionReplacer;
 using System.Linq;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace AAT.CloseCaptions
 {
     public class LanguageCaption : IComparable
     {
+        [Newtonsoft.Json.JsonIgnore]
         public string language { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public ClosedCaptions captionFile;
-
+        [Newtonsoft.Json.JsonIgnore]
         private List<ClosedCaptionWrapperClass> ConvertedList;
         public List<ClosedCaptionWrapperClass> GetCaptions
         {
@@ -32,8 +35,9 @@ namespace AAT.CloseCaptions
                 return ConvertedList;
             }
         }
-
+        [Newtonsoft.Json.JsonIgnore]
         private Dictionary<uint, ClosedCaption> m_captionsByHash;
+        [Newtonsoft.Json.JsonIgnore]
         public Dictionary<uint, ClosedCaption> CaptionsByHash
         {
             get

@@ -12,47 +12,54 @@ namespace AAT.CloseCaptions
 {
     public class ClosedCaptionWrapperClass : INotifyPropertyChanged
     {
+        [Newtonsoft.Json.JsonIgnore]
         private ClosedCaption Parent;
-
         public event PropertyChangedEventHandler PropertyChanged;
         public ClosedCaptionWrapperClass(ClosedCaption c)
         {
             Parent = c;
         }
+        [Newtonsoft.Json.JsonIgnore]
         public ClosedCaption GetParent
         {
             get => Parent;
         }
+        public uint GetHash
+        {
+            get => Parent.SoundEventHash;
+        }
         public string GetText
         {
-            get => Parent.Definition;
+            get => Parent.RawDefinition;
             set
             {
                 Parent.Definition = value;
                 NotifyPropertyChanged(nameof(GetText));
                 NotifyPropertyChanged(nameof(GetClearerText));
+                Addon.RefreshDictionaries();
             }
         }
         public string GetRealName
         {
             get
             {
+                //if (SoundeventBuilder.SoundeventDictionary.TryGetValue(Parent.SoundEventHash, out Soundevent v))
                 if (Addon.AvailableSoundeventDictionary.TryGetValue(Parent.SoundEventHash, out Soundevent v))
                     return v.EventName;
                 return Parent.SoundEventHash.ToString();
             }
         }
-
         public string GetMetaCharacter
         {
             get
             {
+                //if (SoundeventBuilder.SoundeventDictionary.TryGetValue(Parent.SoundEventHash, out Soundevent v))
                 if (Addon.AvailableSoundeventDictionary.TryGetValue(Parent.SoundEventHash, out Soundevent v))
                     return v.GetMeta;
                 return "";
             }
         }
-
+        [Newtonsoft.Json.JsonIgnore]
         public string GetClearerText
         {
             get
