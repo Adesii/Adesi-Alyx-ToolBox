@@ -20,13 +20,13 @@ namespace AAT.Addons
 
         public ResourceManifest Manifest;
 
-        public Dictionary<string,SoundeventFile> AddonSpecificAddonFiles = new ();
+        public Dictionary<string, SoundeventFile> AddonSpecificAddonFiles = new();
         private ObservableCollection<Soundevent> m_soundevents;
         public ObservableCollection<Soundevent> AllSoundevents
         {
             get
             {
-                if(m_soundevents == null || refreshList)
+                if (m_soundevents == null || refreshList)
                 {
                     m_soundevents = new ObservableCollection<Soundevent>();
                     foreach (var item in AddonSpecificAddonFiles)
@@ -42,19 +42,46 @@ namespace AAT.Addons
             }
         }
 
+        //might break later Watch out. or be the cause of extremely slow things.
+        /// <summary>
+        /// Clears Dictionaries so they Reload on the Next load.
+        /// </summary>
+        public static void RefreshDictionaries()
+        {
+            m_AvailableCloseCaptions = null;
+            m_AvailableSoundeventDictionary = null;
+            //System.Diagnostics.Debug.WriteLine("Dictionaries cleared");
+
+        }
+
+        private static Dictionary<string, LanguageCaption> m_AvailableCloseCaptions;
+        /// <summary>
+        /// Returns a combination of Game Captions and Addon ones.
+        /// </summary>
         public static Dictionary<string, LanguageCaption> AvailableCloseCaptions
         {
             get
             {
-                return AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.Concat(SoundeventBuilder.CaptionDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value);
+                if (m_AvailableCloseCaptions == null)
+                {
+                    m_AvailableCloseCaptions = AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.Concat(SoundeventBuilder.CaptionDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonCaptionDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value);
+                    System.Diagnostics.Debug.WriteLine("CC Refreshed");
+                }
+                return m_AvailableCloseCaptions;
             }
         }
 
-        public static Dictionary<uint, Soundevent> AvailableSoundeventDictionary 
+        private static Dictionary<uint, Soundevent> m_AvailableSoundeventDictionary;
+        /// <summary>
+        /// Returns a combination of Game Soundevents and Addon ones.
+        /// </summary>
+        public static Dictionary<uint, Soundevent> AvailableSoundeventDictionary
         {
             get
             {
-                return AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.Concat(SoundeventBuilder.SoundeventDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value); ;
+                if (m_AvailableSoundeventDictionary == null)
+                    m_AvailableSoundeventDictionary = AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.Concat(SoundeventBuilder.SoundeventDictionary.Where(kvp => !Addons.AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary.ContainsKey(kvp.Key))).ToDictionary(x => x.Key, x => x.Value);
+                return m_AvailableSoundeventDictionary;
             }
         }
         public Addon(string path, bool onlySoundeventsFolder = false)
