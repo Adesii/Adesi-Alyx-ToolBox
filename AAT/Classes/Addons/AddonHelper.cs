@@ -238,6 +238,7 @@ namespace AAT.Addons
                 sb.AppendLine("\t{");
                 foreach (var property in soundevent.Properties)
                 {
+                    if (property.Value == null || string.IsNullOrWhiteSpace(property.Value.ToString())) continue;
                     sb.Append("\t\t");
                     sb.Append(property.TypeName);
                     sb.Append(" = ");
@@ -261,7 +262,14 @@ namespace AAT.Addons
                         switch (property.DisAs)
                         {
                             case EventDisplays.FloatValue:
-                                sb.Append((float.Parse(property.Value.ToString())).ToString("0.00##").Replace(",", "."));
+                                if(property.Value != null)
+                                {
+                                    sb.Append((float.Parse(property.Value.ToString())).ToString("0.00##").Replace(",", "."));
+                                }
+                                else
+                                {
+                                    sb.Append(property.Value);
+                                }
                                 break;
                             case EventDisplays.SoundeventPicker:
                             case EventDisplays.StringValue:

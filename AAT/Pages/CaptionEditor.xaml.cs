@@ -16,7 +16,8 @@ using AAT.CloseCaptions;
 using AAT.Windows;
 using AAT.Soundevents;
 using System.Linq;
-
+using System.Diagnostics;
+using HLACaptionReplacer;
 namespace AAT.Pages
 {
     /// <summary>
@@ -33,7 +34,11 @@ namespace AAT.Pages
                 return m_instance;
             }
         }
+
+        bool CurrentlyViewable = false;
+
         private static Cheatsheet cheatsheet;
+        private static CaptionTypeEditor captionEditing;
         public CaptionEditor()
         {
             InitializeComponent();
@@ -51,6 +56,7 @@ namespace AAT.Pages
             AddonManager.AddonChanged += addonChanged;
             CloseCaptionManager.LoadCaptions();
             MainWindow.ChangeTheme(Instance);
+            CurrentlyViewable = true;
         }
         public void SetSource()
         {
@@ -88,6 +94,31 @@ namespace AAT.Pages
 
             CloseCaptionManager.CurrLang = LC.language;
             
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (!CurrentlyViewable) return;
+            captionEditing = Windows.CaptionTypeEditor.Instance;
+            captionEditing.Owner = MainWindow.Instance;
+            Debug.WriteLine(sender.GetType());
+            if(sender.GetType()== typeof(DataGrid))
+            {
+                var grid = sender as DataGrid;
+                if(grid.SelectedItem == null)
+                {
+                    return;
+                }
+                else
+                {
+                    CaptionTypeEditor.Instance.CurrentCaption = grid.SelectedItem as ClosedCaptionWrapperClass;
+                }
+            }
+            if (captionEditing != null)
+            {
+                captionEditing.Show();
+                captionEditing.Focus();
+            }
         }
     }
 }

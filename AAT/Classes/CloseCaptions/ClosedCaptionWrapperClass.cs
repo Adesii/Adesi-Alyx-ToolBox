@@ -6,18 +6,33 @@ using System.Threading.Tasks;
 using HLACaptionReplacer;
 using AAT.Addons;
 using AAT.Soundevents;
+using System.ComponentModel;
 
 namespace AAT.CloseCaptions
 {
-    public class ClosedCaptionWrapperClass
+    public class ClosedCaptionWrapperClass : INotifyPropertyChanged
     {
         private ClosedCaption Parent;
 
+        public event PropertyChangedEventHandler PropertyChanged;
         public ClosedCaptionWrapperClass(ClosedCaption c)
         {
             Parent = c;
         }
-
+        public ClosedCaption GetParent
+        {
+            get => Parent;
+        }
+        public string GetText
+        {
+            get => Parent.Definition;
+            set
+            {
+                Parent.Definition = value;
+                NotifyPropertyChanged(nameof(GetText));
+                NotifyPropertyChanged(nameof(GetClearerText));
+            }
+        }
         public string GetRealName
         {
             get
@@ -48,9 +63,14 @@ namespace AAT.CloseCaptions
                     if (!string.IsNullOrWhiteSpace(text))
                         return text;
                 }
-                    
+
                 return Parent.Definition;
             }
+        }
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

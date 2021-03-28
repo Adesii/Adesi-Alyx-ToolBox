@@ -33,6 +33,9 @@ namespace AAT.Soundevents
                 List<Soundevent> soundevents = new List<Soundevent>();
                 var pakr = new SteamDatabase.ValvePak.Package();
                 pakr.Read(Properties.Settings.Default.InstallPath + "/game/hlvr/pak01_dir.vpk");
+
+                Dictionary<string, SoundeventsPropertyDefinitions.EventTypeStruct> TypeDictionaryTemp = new();
+                
                 foreach (var item in pakr.Entries["vsndevts_c"])
                 {
                     
@@ -48,7 +51,8 @@ namespace AAT.Soundevents
                         Soundevent se = new(obb.Key);
                         foreach (var inobb in ((KVObject)obb.Value))
                         {
-                            SoundeventsPropertyDefinitions.TypeDictionary.TryAdd(inobb.Key,new SoundeventsPropertyDefinitions.EventTypeStruct() {Name = inobb.Key,Type=inobb.Value.GetType() });
+                            TypeDictionaryTemp[inobb.Key]=new SoundeventsPropertyDefinitions.EventTypeStruct() {Name = inobb.Key,Type=inobb.Value.GetType() };
+
                             switch (inobb.Key)
                             {
                                 case "base":
@@ -68,6 +72,11 @@ namespace AAT.Soundevents
 
                     //var s = VKr.Deserialize();
 
+                }
+                SoundeventsPropertyDefinitions.TypeDictionary.Clear();
+                foreach (var item in TypeDictionaryTemp)
+                {
+                    SoundeventsPropertyDefinitions.TypeDictionary.Add(item.Key,item.Value);
                 }
                 allsoundeventsfromGame = soundevents;
                 Debug.WriteLine("finished loading all sounds");

@@ -28,7 +28,7 @@ namespace AAT
     {
         public const string Theme = "Steel";
 
-        public static MetroWindow Instance;
+        public static MainWindow Instance;
 
         public static Brush BackgroundLightMode;
         public static Brush BackgroundDarkMode;
@@ -46,7 +46,8 @@ namespace AAT
         {
             Properties.Settings.Default.LastSelectedAddon = AddonManager.CurrentAddon.AddonName;
             Properties.Settings.Default.Save();
-            Windows.Cheatsheet.Instance?.Close();
+            //Windows.Cheatsheet.Instance?.Close();
+            //App.Current.Shutdown(0);
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -70,6 +71,7 @@ namespace AAT
                 AddonSelectionBox.SelectedIndex = AddonManager.Addons.IndexOf(AddonManager.Addons.Where((e) => { return e.AddonName == Properties.Settings.Default.LastSelectedAddon; }).First());
 
             }
+            App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             _ = Soundevents.SoundeventBuilder.Instance;
             CloseCaptions.CloseCaptionManager.LoadCaptions(true);
         }

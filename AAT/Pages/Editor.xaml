@@ -33,7 +33,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
-                Text="{Binding Value}" />
+                Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="EventPicker">
             <ComboBox
@@ -49,8 +49,48 @@
                 mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
                 DisplayMemberPath="EventName"
                 IsEditable="True"
-                ItemsSource="{Binding SoundeventList, ElementName=page}"
-                Loaded="EventPicker_Loaded" />
+                ItemsSource="{Binding SoundeventList, ElementName=page, UpdateSourceTrigger=PropertyChanged}"
+                Loaded="EventPicker_Loaded"
+                SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectionChanged="EventPicker_SelectionChanged" />
+        </DataTemplate>
+        <DataTemplate x:Key="TypePicker">
+            <ComboBox
+                DisplayMemberPath="Key"
+                IsEditable="True"
+                ItemsSource="{Binding Stuff, ElementName=page}"
+                SelectionChanged="TypeSelectionChanged"
+                Text="{Binding TypeName}">
+                <ComboBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Expander Header="{Binding Name}">
+                                                <ItemsPresenter />
+                                            </Expander>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ComboBox.GroupStyle>
+            </ComboBox>
+        </DataTemplate>
+        <DataTemplate x:Key="ArrayTemplate">
+            <TreeView>
+                <StackPanel>
+                    <ItemsPresenter />
+                    <Button />
+                </StackPanel>
+            </TreeView>
+        </DataTemplate>
+        <DataTemplate x:Key="FilePicker">
+            <ScrollViewer />
         </DataTemplate>
         <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
     </Page.Resources>
@@ -149,7 +189,6 @@
             CanUserResizeColumns="False"
             CanUserResizeRows="False"
             CanUserSortColumns="False"
-            EnableColumnVirtualization="True"
             GridLinesVisibility="Horizontal">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="*" Header="Type">
@@ -212,8 +251,7 @@
             DisplayMemberPath="Key"
             IsEditable="True"
             KeyUp="ComboBoxAddItem_KeyDown"
-            Loaded="ComboBoxAddItem_Loaded"
-            SelectionChanged="ComboBoxAddItem_SelectionChanged">
+            Loaded="ComboBoxAddItem_Loaded">
             <ComboBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.ContainerStyle>

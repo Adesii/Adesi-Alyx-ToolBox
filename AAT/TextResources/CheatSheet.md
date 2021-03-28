@@ -13,9 +13,10 @@ Legend:
 | \<clr:R,G,B> | Defines the Color of the next Segment | \<clr:255,255,10>This Text will be colored.\<cr><br>\<clr:255,10,255>this will have a different color.
 | \<playerclr:R,G,B> | Defines the player Color of the next Segment (no clue why) | \<sfx>\<norepeat:5>\<playerclr:255,176,0>[Crowbar Thwap!]
 | \<HEADSET> | ... |
-| \<sb> | Bold | \<sb>**To say this product was challenge would be an understatement:**\<sb>
+| \<B> | Bold | \<B>**To say this product was challenge would be an understatement:**\<B>
 | \<I>| Italic | \<I>*Half-Life: Alyx*\<I>
 | \<cr>| New line | 
+| \<sb> | starts a new Caption | \<sb> This is a new subtitle in VR
 | \<sfx[:Number]>| Defines the Caption to be for a Sound Effect  | \<sfx>[Big Boi Explosion.]
 | \<norepeat[:Number]>| Defines the Caption to not repeat | \<sfx>\<norepeat:3>\<clr:255,0,0>[Combine Death]
 | \<norepeat_global[:Number]>| Defines the Caption to not repeat globally | \<sfx>\<norepeat_global:5>[Shuffling in Ceiling Vents]

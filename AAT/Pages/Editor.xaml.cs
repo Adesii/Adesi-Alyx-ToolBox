@@ -40,7 +40,7 @@ namespace AAT.Pages
         public ObservableCollection<Soundevent> SoundeventList => builder.AllSoundEvents;
 
         public ObservableCollection<string> ValueTypes { get => vt; }
-        private ObservableCollection<string> vt = new ();
+        private ObservableCollection<string> vt = new();
 
         public static SortedDictionary<string, EventTypeStruct> TypeDictionary => SoundeventsPropertyDefinitions.TypeDictionary;
 
@@ -113,12 +113,12 @@ namespace AAT.Pages
             }
         }
 
-        public void SetFiltered(Func<Soundevent,bool> predicate)
+        public void SetFiltered(Func<Soundevent, bool> predicate)
         {
             ObservableCollection<Soundevent> b = new(SoundeventBuilder.Instance.AllBaseSoundEvents.Concat(SoundeventBuilder.Instance.AddonBasedEvents));
             BaseSoundeventName.ItemsSource = new ObservableCollection<Soundevent>(b.Where(predicate));
         }
-        
+
         private async void CreateMessageDialog(ErrorCodes code = ErrorCodes.OK, string text = "", string body = "")
         {
             Debug.Print("MessageDialog Received");
@@ -192,18 +192,6 @@ namespace AAT.Pages
 
         }
 
-        private void ComboBoxAddItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cb = (ComboBox)sender;
-            Soundevent se = (Soundevent)SoundeventName.SelectedItem;
-            if (se != null && cb.SelectedItem != null)
-            {
-                CreateMessageDialog(builder.AddCustomPropertyToEvent(se, cb.SelectedItem.ToString()));
-                builder.ShowPropertiesOfSoundevent(se);
-                e.Handled = true;
-            }
-        }
-
         private void ComboBoxAddItem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -212,7 +200,21 @@ namespace AAT.Pages
                 Soundevent se = (Soundevent)SoundeventName.SelectedItem;
                 if (se != null && cb.Text != "")
                 {
-                    CreateMessageDialog(builder.AddCustomPropertyToEvent(se, cb.Text));
+                    if (cb.SelectedItem != null)
+                    {
+                        KeyValuePair<string, EventTypeStruct> kvp = (KeyValuePair<string, EventTypeStruct>)cb.SelectedItem;
+                        CreateMessageDialog(builder.AddCustomPropertyToEvent(se, kvp.Key, kvp.Value.Type));
+                    }
+                    else
+                    {
+                        if (SoundeventsPropertyDefinitions.TypeDictionary.TryGetValue(cb.Text, out EventTypeStruct v))
+
+                            CreateMessageDialog(builder.AddCustomPropertyToEvent(se, v));
+                        else
+                            CreateMessageDialog(builder.AddCustomPropertyToEvent(se, cb.Text));
+                    }
+
+
                     builder.ShowPropertiesOfSoundevent(se);
                 }
 
@@ -238,13 +240,30 @@ namespace AAT.Pages
         {
             ComboBox s = sender as ComboBox;
             var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
-            Debug.WriteLine(name?.Value);
-            s.SelectedItem = builder.AllSoundEvents.Single((e)=> { return e.EventName.Equals(name.Value); }); 
+            //Debug.WriteLine(name?.Value);
+            try
+            {
+                s.SelectedItem = builder.AllSoundEvents.Single((e) => { return e.EventName.Equals(name.Value); });
+            }
+            catch (Exception)
+            {
+
+            }
+
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             AddonManager.CurrentAddon.ApplyChanges();
+        }
+
+        private void EventPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox s = sender as ComboBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            //Debug.WriteLine(name?.Value);
+            name.Value = s.SelectedItem;
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
@@ -256,6 +275,7 @@ namespace AAT.Pages
 
                 SoundeventProperty soundeventProperty = item as SoundeventProperty;
                 DataTemplate Template;
+                //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
                 switch (soundeventProperty.DisAs)
                 {
                     case EventDisplays.FloatValue:
@@ -265,10 +285,13 @@ namespace AAT.Pages
                         Template = element.FindResource("EventPicker") as DataTemplate;
                         break;
                     case EventDisplays.ArrayValue:
-                        Template = element.FindResource("TextTemplate") as DataTemplate;
+                        Template = element.FindResource("ArrayTemplate") as DataTemplate;
                         break;
                     case EventDisplays.StringValue:
                         Template = element.FindResource("TextTemplate") as DataTemplate;
+                        break;
+                    case EventDisplays.FilePicker:
+                        Template = element.FindResource("FilePicker") as DataTemplate;
                         break;
                     default:
                         Template = element.FindResource("TextTemplate") as DataTemplate;

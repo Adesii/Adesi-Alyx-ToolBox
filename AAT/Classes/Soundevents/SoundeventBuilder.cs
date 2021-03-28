@@ -49,7 +49,7 @@ namespace AAT.Soundevents
         public ObservableCollection<Soundevent> AllSoundEvents = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> AllBaseSoundEvents = new ObservableCollection<Soundevent>();
         public ObservableCollection<Soundevent> AddonBasedEvents { get => AddonManager.CurrentAddon.AllSoundevents; }
-        public ObservableCollection<SoundeventProperty> properties = new ObservableCollection<SoundeventProperty>();
+        public ObservableCollection<SoundeventProperty> properties = new();
 
 
         public static Dictionary<uint, Soundevent> SoundeventDictionary = new();
@@ -141,14 +141,19 @@ namespace AAT.Soundevents
             return Event.AddProperty(new SoundeventProperty(propertyName.ToString()));
 
         }
-        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event, Type types, string typeName)
-        {
-            return Event.AddProperty(new SoundeventProperty(typeName, types));
-        }
-        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event, string type = "", string Val = "")
+        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event,  string typeName, Type types)
         {
 
-            return Event.AddProperty(new SoundeventProperty(type.Trim(), Val.Trim()));
+            return Event.AddProperty(new SoundeventProperty(typeName, types));
+        }
+        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event, string type = "", object Val = null)
+        {
+
+            return Event.AddProperty(new SoundeventProperty(type.Trim(), Val));
+        }
+        public ErrorCodes AddCustomPropertyToEvent(Soundevent Event, SoundeventsPropertyDefinitions.EventTypeStruct TS)
+        {
+            return Event.AddProperty(new SoundeventProperty(TS));
         }
 
 

@@ -36,10 +36,12 @@
             CanUserReorderColumns="False"
             CanUserResizeColumns="False"
             CanUserResizeRows="False"
-            CanUserSortColumns="False"
-            EnableColumnVirtualization="True"
+            CanUserSortColumns="True"
             GridLinesVisibility="Horizontal"
-            SelectedIndex="0">
+            IsSynchronizedWithCurrentItem="True"
+            SelectedIndex="0"
+            SelectionChanged="Button_Click_1"
+            SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTemplateColumn
                     Width="*"
@@ -47,7 +49,7 @@
                     SortMemberPath="GetRealName">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding GetRealName, Mode=OneWay}" />
+                            <TextBlock Text="{Binding GetRealName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -61,14 +63,14 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Grid.IsSharedSizeScope="True"
-                                Text="{Binding GetMetaCharacter, Mode=OneWay}" />
+                                Text="{Binding GetMetaCharacter, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="*" Header="Text">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Padding="50,0,0,0" Text="{Binding GetClearerText, Mode=OneWay}" />
+                            <TextBlock Padding="50,0,0,0" Text="{Binding GetClearerText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -105,6 +107,14 @@
             Foreground="{DynamicResource MahApps.Brushes.Text}"
             Text="Loading....."
             TextAlignment="Center" />
+        <Button
+            Grid.Column="2"
+            Width="70"
+            Margin="435,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="Button_Click_1"
+            Content="Open Editing" />
 
     </Grid>
 </Page>
