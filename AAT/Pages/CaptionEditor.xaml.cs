@@ -65,24 +65,20 @@ namespace AAT.Pages
 
             //List<string> compiled = new();
             //ITraceWriter traceWriter = new MemoryTraceWriter();
-            //SoundeventBuilder.CaptionDictionary.AsParallel().ForAll((e) =>
-            //{
-            //    compiled.Add(JsonConvert.SerializeObject(e, new JsonSerializerSettings
-            //    {
-            //        TraceWriter = traceWriter,
-            //        MaxDepth = 1,
-            //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            //        Error = delegate (object sender, ErrorEventArgs args)
-            //        {
-            //            args.ErrorContext.Handled = true;
-            //        }
-            //    }
-            //        ));
-            //});
-            //
-            //
+
+            
             //Debug.WriteLine(traceWriter.ToString());
-            //System.IO.File.WriteAllLinesAsync("C:/Users/kopie/Desktop/New folder/allCaption.Json", compiled);
+            //System.IO.File.WriteAllTextAsync("C:/Users/kopie/Desktop/New folder/allCaption.Json", JsonConvert.SerializeObject(SoundeventBuilder.CaptionDictionary, new JsonSerializerSettings
+            //{
+            //    TraceWriter = traceWriter,
+            //    MaxDepth = 1,
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //    Error = delegate (object sender, ErrorEventArgs args)
+            //    {
+            //        args.ErrorContext.Handled = true;
+            //    }
+            //}
+            //        ));
         }
         public void SetSource()
         {

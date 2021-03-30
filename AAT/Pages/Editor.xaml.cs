@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using static AAT.Soundevents.SoundeventsPropertyDefinitions;
 using System.Collections;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Pages
 {
@@ -203,7 +204,7 @@ namespace AAT.Pages
                     if (cb.SelectedItem != null)
                     {
                         KeyValuePair<string, EventTypeStruct> kvp = (KeyValuePair<string, EventTypeStruct>)cb.SelectedItem;
-                        CreateMessageDialog(builder.AddCustomPropertyToEvent(se, kvp.Key, kvp.Value.Type));
+                        CreateMessageDialog(builder.AddCustomPropertyToEvent(se, kvp.Value));
                     }
                     else
                     {
@@ -257,7 +258,11 @@ namespace AAT.Pages
             ComboBox s = sender as ComboBox;
             var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
             //Debug.WriteLine(name?.Value);
-            name.Value = s.SelectedItem;
+            if (s.SelectedItem != null)
+            {
+                Debug.WriteLine(s.SelectedItem);
+                name.Value = s.SelectedItem as Soundevent;
+            }
         }
 
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -265,54 +270,86 @@ namespace AAT.Pages
             ComboBox s = sender as ComboBox;
             var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
             //Debug.WriteLine(name?.Value);
-            if(s.SelectedItem != null)
+            if (s.SelectedItem != null)
             {
                 Debug.WriteLine(s.SelectedItem);
-                name.Type = ((KeyValuePair<string, EventTypeStruct>)s.SelectedItem).Value.Type;
+                name.Type = ((KeyValuePair<string, EventTypeStruct>)s.SelectedItem).Value.Realtype;
             }
             else
             {
                 name.Type = typeof(string);
             }
-            
+
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {
 
-        
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            
+
             if (container is FrameworkElement element && item != null)
             {
-
-                SoundeventProperty soundeventProperty = item as SoundeventProperty;
-                soundeventProperty.ValueContainer = container;
-                DataTemplate Template;
-                //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
-                switch (soundeventProperty.DisAs)
+                Debug.WriteLine(item.GetType());
+                if (item is KeyValuePair<string, KVValue>)
                 {
-                    case EventDisplays.FloatValue:
-                        Template = element.FindResource("FloatTemplate") as DataTemplate;
-                        break;
-                    case EventDisplays.SoundeventPicker:
-                        Template = element.FindResource("EventPicker") as DataTemplate;
-                        break;
-                    case EventDisplays.ArrayValue:
-                        Template = element.FindResource("ArrayTemplate") as DataTemplate;
-                        break;
-                    case EventDisplays.StringValue:
-                        Template = element.FindResource("TextTemplate") as DataTemplate;
-                        break;
-                    case EventDisplays.FilePicker:
-                        Template = element.FindResource("FilePicker") as DataTemplate;
-                        break;
-                    default:
-                        Template = element.FindResource("TextTemplate") as DataTemplate;
-                        break;
+                    var i = ((KeyValuePair<string, KVValue>)item).Value;
+                    Debug.WriteLine(((KeyValuePair<string, KVValue>)item).Key);
+
+                    DataTemplate Template;
+                    switch (GetTypeByEnum(i.Type))
+                    {
+                        case EventDisplays.FloatValue:
+                            Template = element.FindResource("FloatArrayTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.ArrayValue:
+                            Template = element.FindResource("ArrayTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.StringValue:
+                            Template = element.FindResource("TextArrayTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.FilePicker:
+                            Template = element.FindResource("FilePicker") as DataTemplate;
+                            break;
+                        default:
+                            Template = element.FindResource("TextArrayTemplate") as DataTemplate;
+                            break;
+                    }
+                    return Template;
                 }
-                return Template;
+                else
+                {
+
+
+                    SoundeventProperty soundeventProperty = item as SoundeventProperty;
+                    if (soundeventProperty == null) return null;
+                        soundeventProperty.ValueContainer = container;
+                    DataTemplate Template;
+                    //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
+                    switch (soundeventProperty.DisAs)
+                    {
+                        case EventDisplays.FloatValue:
+                            Template = element.FindResource("FloatTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.SoundeventPicker:
+                            Template = element.FindResource("EventPicker") as DataTemplate;
+                            break;
+                        case EventDisplays.ArrayValue:
+                            Template = element.FindResource("ArrayTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.StringValue:
+                            Template = element.FindResource("TextTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.FilePicker:
+                            Template = element.FindResource("FilePicker") as DataTemplate;
+                            break;
+                        default:
+                            Template = element.FindResource("TextTemplate") as DataTemplate;
+                            break;
+                    }
+                    return Template;
+                }
             }
             return base.SelectTemplate(item, container);
         }
@@ -320,6 +357,39 @@ namespace AAT.Pages
         private void SoundeventProperty_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+        public EventDisplays GetTypeByEnum(KVType kvt)
+        {
+            switch (kvt)
+            {
+
+                case KVType.BOOLEAN:
+                    return EventDisplays.StringValue;
+                case KVType.OBJECT:
+                case KVType.NULL:
+                case KVType.STRING:
+                    return EventDisplays.StringValue;
+                case KVType.STRING_MULTI:
+                case KVType.BINARY_BLOB:
+                case KVType.ARRAY:
+                case KVType.ARRAY_TYPED:
+                    return EventDisplays.ArrayValue;
+                case KVType.BOOLEAN_TRUE:
+                case KVType.BOOLEAN_FALSE:
+                    return EventDisplays.StringValue;
+                case KVType.INT64:
+                case KVType.UINT64:
+                case KVType.DOUBLE:
+                case KVType.INT32:
+                case KVType.UINT32:
+                case KVType.INT64_ZERO:
+                case KVType.INT64_ONE:
+                case KVType.DOUBLE_ZERO:
+                case KVType.DOUBLE_ONE:
+                    return EventDisplays.FloatValue;
+                default:
+                    return EventDisplays.StringValue;
+            }
         }
     }
 

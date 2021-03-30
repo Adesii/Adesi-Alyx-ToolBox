@@ -49,9 +49,9 @@ namespace AAT.Soundevents
                     {
                         List<SoundeventProperty> propss = new();
                         Soundevent se = new(obb.Key);
-                        foreach (var inobb in ((KVObject)obb.Value))
+                        foreach (var inobb in ((KVObject)obb.Value).Properties)
                         {
-                            TypeDictionaryTemp[inobb.Key]=new SoundeventsPropertyDefinitions.EventTypeStruct() {Name = inobb.Key,Type=inobb.Value.GetType() };
+                            TypeDictionaryTemp[inobb.Key] = new SoundeventsPropertyDefinitions.EventTypeStruct() { Name = inobb.Key, Type = inobb.Value.Type, Realtype = inobb.Value.GetType(),KVValue = inobb.Value };
 
                             switch (inobb.Key)
                             {

@@ -25,7 +25,7 @@
                 NumericInputMode="All"
                 StringFormat="f3"
                 TextAlignment="Center"
-                Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Value="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="TextTemplate">
             <TextBox
@@ -33,7 +33,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
-                Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="EventPicker">
             <ComboBox
@@ -51,7 +51,7 @@
                 IsEditable="True"
                 ItemsSource="{Binding SoundeventList, ElementName=page, UpdateSourceTrigger=PropertyChanged}"
                 Loaded="EventPicker_Loaded"
-                SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 SelectionChanged="EventPicker_SelectionChanged" />
         </DataTemplate>
         <DataTemplate x:Key="TypePicker">
@@ -81,18 +81,57 @@
                 </ComboBox.GroupStyle>
             </ComboBox>
         </DataTemplate>
+        <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
+
+
+        <DataTemplate x:Key="FloatArrayTemplate">
+            <mah:NumericUpDown
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Interval="0.1"
+                NumericInputMode="All"
+                StringFormat="f3"
+                TextAlignment="Center"
+                Value="{Binding Value.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+        <DataTemplate x:Key="TextArrayTemplate">
+            <TextBox
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Text="{Binding Value.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
         <DataTemplate x:Key="ArrayTemplate">
-            <TreeView>
+            <ScrollViewer
+                MaxHeight="200"
+                Padding="10,0,0,0"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch">
                 <StackPanel>
-                    <ItemsPresenter />
-                    <Button />
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        IsSynchronizedWithCurrentItem="True"
+                        ItemsSource="{Binding Value.Value.Properties}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn
+                                Width="*"
+                                CellTemplateSelector="{StaticResource BasedOnValue}"
+                                Header="Value" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Click="Button_Click_1" Content="{IconPack:BootstrapIcons Kind=X}" />
                 </StackPanel>
-            </TreeView>
+
+            </ScrollViewer>
+
         </DataTemplate>
         <DataTemplate x:Key="FilePicker">
             <ScrollViewer />
         </DataTemplate>
-        <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
     </Page.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

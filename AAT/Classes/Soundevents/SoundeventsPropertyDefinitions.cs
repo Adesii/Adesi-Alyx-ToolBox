@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Soundevents
 {
@@ -27,9 +28,12 @@ namespace AAT.Soundevents
         {
             private string m_name;
             private string m_group;
-            private Type m_type;
+            private KVType m_type;
+            private Type m_realtype;
+            private int m_arrayDepth;
+            private object m_KVValue;
 
-            public Type Type
+            public KVType Type
             {
                 get
                 {
@@ -66,6 +70,10 @@ namespace AAT.Soundevents
                         m_group = value.Substring(0, value.IndexOf("_"));
                 }
             }
+
+            public int ArrayDepth { get => m_arrayDepth; set => m_arrayDepth = value; }
+            public Type Realtype { get => m_realtype; set => m_realtype = value; }
+            public object KVValue { get => m_KVValue; set => m_KVValue = value; }
         }
     }
 }

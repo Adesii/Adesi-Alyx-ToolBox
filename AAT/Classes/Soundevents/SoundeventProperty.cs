@@ -35,7 +35,7 @@ namespace AAT.Soundevents
             get => m_valCon;
             set
             {
-                if(m_valCon != null) PropertyChanged -= SoundeventProperty_PropertyChanged;
+                if (m_valCon != null) PropertyChanged -= SoundeventProperty_PropertyChanged;
                 m_valCon = value;
                 PropertyChanged += SoundeventProperty_PropertyChanged;
             }
@@ -43,7 +43,7 @@ namespace AAT.Soundevents
 
         private void SoundeventProperty_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-           
+
             var cp = (ContentPresenter)ValueContainer;
             var cts = cp.ContentTemplateSelector;
             cp.ContentTemplateSelector = null;
@@ -57,10 +57,19 @@ namespace AAT.Soundevents
             this.disAs = getDisplayType(property);
 
         }
+        public SoundeventProperty(PropertyNames PropertyName, SoundeventsPropertyDefinitions.EventTypeStruct tStruct)
+        {
+            unpackEventStruct(tStruct);
+            this.typeName = PropertyName.ToString();
+        }
+        public int arrayDepth = 0;
         public SoundeventProperty(string typeName, object v)
         {
             this.typeName = typeName;
-            this.disAs = getDisplayType(v);
+            if (v is KVValue)
+                this.Type = GetTypeByEnum((v as KVValue).Type);
+            else
+                this.disAs = getDisplayType(v);
             this.value = v;
         }
         public SoundeventProperty(string typeName, Type type)
@@ -74,13 +83,59 @@ namespace AAT.Soundevents
             this.typeName = typeName;
             this.disAs = t;
             this.value = v;
+            if (v is KVValue)
+                this.Type = GetTypeByEnum((v as KVValue).Type);
         }
         public SoundeventProperty(SoundeventsPropertyDefinitions.EventTypeStruct ts)
         {
-            this.typeName = ts.Name;
-            this.disAs = getDisplayType(ts.Type);
+            unpackEventStruct(ts);
         }
 
+        public Type GetTypeByEnum(KVType kvt)
+        {
+            switch (kvt)
+            {
+
+                case KVType.BOOLEAN:
+                    this.disAs = EventDisplays.StringValue;
+                    return typeof(bool);
+                case KVType.OBJECT:
+                case KVType.NULL:
+                case KVType.STRING:
+                case KVType.STRING_MULTI:
+                    this.disAs = EventDisplays.StringValue;
+                    return typeof(string);
+                case KVType.BINARY_BLOB:
+                case KVType.ARRAY:
+                case KVType.ARRAY_TYPED:
+                    this.disAs = EventDisplays.ArrayValue;
+                    return typeof(KVValue);
+                case KVType.BOOLEAN_TRUE:
+                case KVType.BOOLEAN_FALSE:
+                    return typeof(bool);
+                case KVType.INT64:
+                case KVType.UINT64:
+                case KVType.DOUBLE:
+                case KVType.INT32:
+                case KVType.UINT32:
+                case KVType.INT64_ZERO:
+                case KVType.INT64_ONE:
+                case KVType.DOUBLE_ZERO:
+                case KVType.DOUBLE_ONE:
+                    this.disAs = EventDisplays.FloatValue;
+                    return typeof(float);
+                default:
+                    this.disAs = EventDisplays.StringValue;
+                    return typeof(string);
+            }
+        }
+
+        public void unpackEventStruct(SoundeventsPropertyDefinitions.EventTypeStruct t)
+        {
+            this.Type = GetTypeByEnum(t.Type);
+            this.Value = t.KVValue;
+            this.typeName = t.Name;
+        }
         public EventDisplays getDisplayType(object val)
         {
             EventDisplays t = EventDisplays.StringValue;
@@ -90,7 +145,7 @@ namespace AAT.Soundevents
             {
                 t = EventDisplays.FloatValue;
             }
-            if ((val as Type) == typeof(ValveResourceFormat.Serialization.KeyValues.KVObject))
+            if ((val as Type) == typeof(KVObject))
             {
                 t = EventDisplays.ArrayValue;
             }
@@ -98,7 +153,7 @@ namespace AAT.Soundevents
         }
         public string TypeName { get => typeName; set { typeName = value; NotifyPropertyChanged(nameof(TypeName)); } }
         public object Value { get => value; set { this.value = value; NotifyPropertyChanged(nameof(Value)); } }
-        public Type Type { get => type; set { type = value; disAs = getDisplayType(type); NotifyPropertyChanged(nameof(Type)); } }
+        public Type Type { get => type; set { type = value; NotifyPropertyChanged(nameof(Type)); } }
         public EventDisplays DisAs { get => disAs; set { disAs = value; NotifyPropertyChanged(nameof(DisAs)); } }
 
         public static bool IsNumeric(Type type)

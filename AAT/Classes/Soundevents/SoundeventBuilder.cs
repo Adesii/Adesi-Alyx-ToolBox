@@ -135,7 +135,7 @@ namespace AAT.Soundevents
         {
             if (SoundeventsPropertyDefinitions.TypeDictionary.TryGetValue(propertyName.ToString(),out SoundeventsPropertyDefinitions.EventTypeStruct t))
             {
-                return Event.AddProperty(new SoundeventProperty(propertyName, t.Type));
+                return Event.AddProperty(new SoundeventProperty(t));
 
             }
             return Event.AddProperty(new SoundeventProperty(propertyName.ToString()));
