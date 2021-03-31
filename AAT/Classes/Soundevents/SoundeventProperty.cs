@@ -18,7 +18,8 @@ namespace AAT.Soundevents
         ArrayValue,
         StringValue,
         TypePicker,
-        FilePicker
+        FilePicker,
+        EventTypePicker
     }
     public class SoundeventProperty : INotifyPropertyChanged
     {
@@ -55,12 +56,16 @@ namespace AAT.Soundevents
             this.typeName = PropertyName.ToString();
             this.type = property;
             this.disAs = getDisplayType(property);
+            HardcodedTypes();
+
 
         }
         public SoundeventProperty(PropertyNames PropertyName, SoundeventsPropertyDefinitions.EventTypeStruct tStruct)
         {
             unpackEventStruct(tStruct);
             this.typeName = PropertyName.ToString();
+            HardcodedTypes();
+
         }
         public int arrayDepth = 0;
         public SoundeventProperty(string typeName, object v)
@@ -71,12 +76,16 @@ namespace AAT.Soundevents
             else
                 this.disAs = getDisplayType(v);
             this.value = v;
+            HardcodedTypes();
+
         }
         public SoundeventProperty(string typeName, Type type)
         {
             this.typeName = typeName;
             this.type = type;
             this.disAs = getDisplayType(type);
+            HardcodedTypes();
+
         }
         public SoundeventProperty(string typeName, EventDisplays t = EventDisplays.StringValue, object v = null)
         {
@@ -85,6 +94,8 @@ namespace AAT.Soundevents
             this.value = v;
             if (v is KVValue)
                 this.Type = GetTypeByEnum((v as KVValue).Type);
+            HardcodedTypes();
+
         }
         public SoundeventProperty(SoundeventsPropertyDefinitions.EventTypeStruct ts)
         {
@@ -135,6 +146,24 @@ namespace AAT.Soundevents
             this.Type = GetTypeByEnum(t.Type);
             this.Value = t.KVValue;
             this.typeName = t.Name;
+
+            HardcodedTypes();
+        }
+
+        public void HardcodedTypes()
+        {
+            switch (typeName)
+            {
+                case "base":
+                    this.disAs = EventDisplays.SoundeventPicker;
+                    break;
+                case "vsnd_files":
+                    this.disAs = EventDisplays.FilePicker;
+                    break;
+                case "type":
+                    this.disAs = EventDisplays.EventTypePicker;
+                    break;
+            }
         }
         public EventDisplays getDisplayType(object val)
         {

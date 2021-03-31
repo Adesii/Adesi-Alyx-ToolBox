@@ -23,6 +23,7 @@ namespace AAT.Soundevents
         }
 
         public static List<Soundevent> allsoundeventsfromGame;
+        public static List<string> AllEventTypes = new();
 
         public static Task GetAlyxSoundeventFromGame()
         {
@@ -35,10 +36,10 @@ namespace AAT.Soundevents
                 pakr.Read(Properties.Settings.Default.InstallPath + "/game/hlvr/pak01_dir.vpk");
 
                 Dictionary<string, SoundeventsPropertyDefinitions.EventTypeStruct> TypeDictionaryTemp = new();
-                
+
                 foreach (var item in pakr.Entries["vsndevts_c"])
                 {
-                    
+
 
                     pakr.ReadEntry(item, out byte[] b, false);
                     var res = new Resource();
@@ -51,12 +52,20 @@ namespace AAT.Soundevents
                         Soundevent se = new(obb.Key);
                         foreach (var inobb in ((KVObject)obb.Value).Properties)
                         {
-                            TypeDictionaryTemp[inobb.Key] = new SoundeventsPropertyDefinitions.EventTypeStruct() { Name = inobb.Key, Type = inobb.Value.Type, Realtype = inobb.Value.GetType(),KVValue = inobb.Value };
+                            TypeDictionaryTemp[inobb.Key] = new SoundeventsPropertyDefinitions.EventTypeStruct() { Name = inobb.Key, Type = inobb.Value.Type, Realtype = inobb.Value.GetType(), KVValue = inobb.Value };
 
                             switch (inobb.Key)
                             {
                                 case "base":
                                     propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
+                                    break;
+                                case "vsnd_files":
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.FilePicker, inobb.Value.ToString()));
+                                    break;
+                                case "type":
+                                    if (!AllEventTypes.Contains(inobb.Value.Value.ToString()))
+                                        AllEventTypes.Add(inobb.Value.Value.ToString());
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.TypePicker, inobb.Value));
                                     break;
                                 default:
                                     propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.StringValue, inobb.Value));
@@ -76,8 +85,9 @@ namespace AAT.Soundevents
                 SoundeventsPropertyDefinitions.TypeDictionary.Clear();
                 foreach (var item in TypeDictionaryTemp)
                 {
-                    SoundeventsPropertyDefinitions.TypeDictionary.Add(item.Key,item.Value);
+                    SoundeventsPropertyDefinitions.TypeDictionary.Add(item.Key, item.Value);
                 }
+                AllEventTypes.Sort();
                 allsoundeventsfromGame = soundevents;
                 Debug.WriteLine("finished loading all sounds");
             });

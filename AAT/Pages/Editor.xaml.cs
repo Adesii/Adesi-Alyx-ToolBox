@@ -45,6 +45,8 @@ namespace AAT.Pages
 
         public static SortedDictionary<string, EventTypeStruct> TypeDictionary => SoundeventsPropertyDefinitions.TypeDictionary;
 
+        public List<string> EventTypes => alyxJsonParser.AllEventTypes;
+
         public IEnumerable Stuff => ComboBoxAddItem.ItemsSource;
 
 
@@ -120,7 +122,7 @@ namespace AAT.Pages
             BaseSoundeventName.ItemsSource = new ObservableCollection<Soundevent>(b.Where(predicate));
         }
 
-        private async void CreateMessageDialog(ErrorCodes code = ErrorCodes.OK, string text = "", string body = "")
+        public static async void CreateMessageDialog(ErrorCodes code = ErrorCodes.OK, string text = "", string body = "")
         {
             Debug.Print("MessageDialog Received");
             if (text != "")
@@ -148,6 +150,9 @@ namespace AAT.Pages
                     case ErrorCodes.EMPTY:
                         await MainWindow.Instance.ShowMessageAsync("Input can't be Empty.", "Type something in and Try again :)\n" + code.ToString());
                         break;
+                    case ErrorCodes.CONNECTION_REFUSED:
+                        await MainWindow.Instance.ShowMessageAsync("Connection Refused", "Make sure Alyx has a Map Loaded and The Vconsole is Closed\n\n\n" + code.ToString());
+                        break;
                     default:
                         break;
                 }
@@ -162,14 +167,12 @@ namespace AAT.Pages
             if (BaseSoundeventName.Text.Equals(""))
             {
 
-                code = builder.CreateNewEvent(SoundeventName.Text);
+                CreateMessageDialog(builder.CreateNewEvent(SoundeventName.Text));
             }
             else
             {
-                code = builder.CreateNewEvent(SoundeventName.Text, BaseSoundeventName.Text);
+                CreateMessageDialog(builder.CreateNewEvent(SoundeventName.Text, BaseSoundeventName.Text));
             }
-
-            CreateMessageDialog(code, "", "");
         }
 
         private void SoundeventName_Selected(object sender, RoutedEventArgs e)
@@ -264,7 +267,17 @@ namespace AAT.Pages
                 name.Value = s.SelectedItem as Soundevent;
             }
         }
-
+        private void EventTypePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox s = sender as ComboBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            //Debug.WriteLine(name?.Value);
+            if (s.SelectedItem != null)
+            {
+                Debug.WriteLine(s.SelectedItem);
+                name.Value = s.SelectedItem;
+            }
+        }
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox s = sender as ComboBox;
@@ -280,6 +293,35 @@ namespace AAT.Pages
                 name.Type = typeof(string);
             }
 
+        }
+
+        private void EventTypePicker_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ComboBox s = sender as ComboBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            //Debug.WriteLine(name?.Value);s
+            if (!string.IsNullOrWhiteSpace(s.Text) && name != null)
+            {
+                Debug.WriteLine(s.Text);
+                name.Value = s.Text;
+            }
+        }
+
+        private void Text_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            TextBox s = sender as TextBox;
+            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            //Debug.WriteLine(name?.Value);s
+            if (!string.IsNullOrWhiteSpace(s.Text) && name != null)
+            {
+                Debug.WriteLine(s.Text);
+                name.Value = s.Text.Trim('\"');
+            }
+        }
+        private void PreviewSound_Click(object sender, RoutedEventArgs e)
+        {
+            //AddonManager.CurrentAddon.ApplyChanges();
+            VConsole.SendCommand("snd_sos_start_soundevent " + ((Soundevent)SoundeventName?.SelectedItem)?.EventName);
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
@@ -310,7 +352,7 @@ namespace AAT.Pages
                             Template = element.FindResource("TextArrayTemplate") as DataTemplate;
                             break;
                         case EventDisplays.FilePicker:
-                            Template = element.FindResource("FilePicker") as DataTemplate;
+                            Template = element.FindResource("TextTemplate") as DataTemplate;
                             break;
                         default:
                             Template = element.FindResource("TextArrayTemplate") as DataTemplate;
@@ -324,7 +366,7 @@ namespace AAT.Pages
 
                     SoundeventProperty soundeventProperty = item as SoundeventProperty;
                     if (soundeventProperty == null) return null;
-                        soundeventProperty.ValueContainer = container;
+                    soundeventProperty.ValueContainer = container;
                     DataTemplate Template;
                     //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
                     switch (soundeventProperty.DisAs)
@@ -342,7 +384,10 @@ namespace AAT.Pages
                             Template = element.FindResource("TextTemplate") as DataTemplate;
                             break;
                         case EventDisplays.FilePicker:
-                            Template = element.FindResource("FilePicker") as DataTemplate;
+                            Template = element.FindResource("TextTemplate") as DataTemplate;
+                            break;
+                        case EventDisplays.EventTypePicker:
+                            Template = element.FindResource("EventTypePicker") as DataTemplate;
                             break;
                         default:
                             Template = element.FindResource("TextTemplate") as DataTemplate;

@@ -18,7 +18,8 @@ namespace AAT.Soundevents
         INVALID,
         DUPLICATE,
         NOTFOUND,
-        EMPTY
+        EMPTY,
+        CONNECTIONREFUSED
     }
     public enum PropertyNames
     {
@@ -123,8 +124,9 @@ namespace AAT.Soundevents
             else
             {
                 se = new Soundevent(name, AddonManager.CurrentAddon);
-                se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.TypePicker));
+                se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.TypePicker, "hlvr_default_3d"));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
+                se.AddProperty(new SoundeventProperty(PropertyNames.vsnd_files.ToString(), EventDisplays.FilePicker));
             }
             AddonBasedEvents.Add(se);
             AddonManager.CurrentAddon.Manifest.AddonSoundeventDictionary[se.Hash] = se;

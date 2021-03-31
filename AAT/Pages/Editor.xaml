@@ -14,6 +14,8 @@
     Background="{DynamicResource MahApps.Brushes.Gray10}"
     mc:Ignorable="d">
     <Page.Resources>
+        <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
+
         <DataTemplate x:Key="FloatTemplate">
             <mah:NumericUpDown
                 Width="Auto"
@@ -33,6 +35,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
+                LostKeyboardFocus="Text_LostKeyboardFocus"
                 Text="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="EventPicker">
@@ -49,6 +52,7 @@
                 mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
                 DisplayMemberPath="EventName"
                 IsEditable="True"
+                IsTextSearchEnabled="True"
                 ItemsSource="{Binding SoundeventList, ElementName=page, UpdateSourceTrigger=PropertyChanged}"
                 Loaded="EventPicker_Loaded"
                 SelectedItem="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -81,8 +85,24 @@
                 </ComboBox.GroupStyle>
             </ComboBox>
         </DataTemplate>
-        <local:DataTemplateBasedOnValue x:Key="BasedOnValue" />
 
+        <DataTemplate x:Key="EventTypePicker">
+            <ComboBox
+                x:Name="EventPicker"
+                Grid.Row="1"
+                Grid.Column="2"
+                MaxHeight="100"
+                Margin="10,4,5,10"
+                HorizontalContentAlignment="Center"
+                mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
+                mah:TextBoxHelper.Watermark="None"
+                mah:TextBoxHelper.WatermarkAlignment="Center"
+                mah:ValidationHelper.CloseOnMouseLeftButtonDown="True"
+                IsEditable="True"
+                ItemsSource="{Binding EventTypes, ElementName=page, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectionChanged="EventTypePicker_SelectionChanged" />
+        </DataTemplate>
 
         <DataTemplate x:Key="FloatArrayTemplate">
             <mah:NumericUpDown
@@ -316,10 +336,32 @@
             Grid.Row="3"
             Grid.Column="4"
             Margin="10,10,10,10"
+            Click="Button_Click_2"
+            Content="Save" />
+        <Button
+            Name="PreviewSound"
+            Grid.Row="3"
+            Grid.Column="2"
+            Width="225"
+            Height="50"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Click="Button_Click_2"
-            Content="Button" />
+            Click="PreviewSound_Click">
+            <StackPanel
+                Width="215"
+                Height="36"
+                Orientation="Horizontal">
+                <Label
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{IconPack:BootstrapIcons Kind=PlayFill}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="Normal"
+                    Text="Preview Sound Event ingame" />
+            </StackPanel>
+        </Button>
 
 
     </Grid>

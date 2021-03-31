@@ -257,12 +257,12 @@ namespace AAT.Addons
                     {
                         if (property.DisAs == EventDisplays.StringValue)
                         {
-                            sb.Append("\"");
+                            sb.AppendLine("\"");
                         }
                         switch (property.DisAs)
                         {
                             case EventDisplays.FloatValue:
-                                if(property.Value != null)
+                                if (property.Value != null)
                                 {
                                     sb.Append((float.Parse(property.Value.ToString())).ToString("0.00##").Replace(",", "."));
                                 }
@@ -272,12 +272,21 @@ namespace AAT.Addons
                                 }
                                 break;
                             case EventDisplays.SoundeventPicker:
-                            case EventDisplays.StringValue:
+                            case EventDisplays.FilePicker:
+                            case EventDisplays.ArrayValue:
+                            case EventDisplays.EventTypePicker:
                             case EventDisplays.TypePicker:
+                                sb.Append('"');
+                                sb.Append(property.Value.ToString().Trim('\"'));
+                                sb.Append('"');
+                                break;
+                            
+                            case EventDisplays.StringValue:
                             default:
-                                sb.Append(property.Value);
+                                sb.Append(property.Value.ToString().Trim('\"'));
                                 break;
                         }
+                        System.Diagnostics.Debug.WriteLine(property.DisAs + "   " + property.TypeName);
                         if (property.DisAs == EventDisplays.StringValue)
                         {
                             sb.AppendLine("\"");
