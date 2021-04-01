@@ -270,19 +270,19 @@ namespace AAT.Pages
         private void EventTypePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox s = sender as ComboBox;
-            var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
+            var name = s?.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
             //Debug.WriteLine(name?.Value);
-            if (s.SelectedItem != null)
+            if (s.SelectedItem != null && name != null)
             {
                 Debug.WriteLine(s.SelectedItem);
-                name.Value = s.SelectedItem;
+                name.Value = s?.SelectedItem;
             }
         }
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox s = sender as ComboBox;
             var name = s.TryFindParent<DataGridRow>()?.Item as SoundeventProperty;
-            //Debug.WriteLine(name?.Value);
+            Debug.WriteLine(name?.Value);
             if (s.SelectedItem != null)
             {
                 Debug.WriteLine(s.SelectedItem);
@@ -333,7 +333,7 @@ namespace AAT.Pages
 
             if (container is FrameworkElement element && item != null)
             {
-                Debug.WriteLine(item.GetType());
+                Debug.WriteLine(item.GetType()+"inside something");
                 if (item is KeyValuePair<string, KVValue>)
                 {
                     var i = ((KeyValuePair<string, KVValue>)item).Value;
@@ -351,9 +351,13 @@ namespace AAT.Pages
                         case EventDisplays.StringValue:
                             Template = element.FindResource("TextArrayTemplate") as DataTemplate;
                             break;
+                        case EventDisplays.SoundeventPicker:
+                        case EventDisplays.TypePicker:
+                        case EventDisplays.EventTypePicker:
                         case EventDisplays.FilePicker:
                             Template = element.FindResource("TextTemplate") as DataTemplate;
                             break;
+                        
                         default:
                             Template = element.FindResource("TextArrayTemplate") as DataTemplate;
                             break;
@@ -368,7 +372,7 @@ namespace AAT.Pages
                     if (soundeventProperty == null) return null;
                     soundeventProperty.ValueContainer = container;
                     DataTemplate Template;
-                    //Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
+                    Debug.WriteLine($"Soundevent Property:{soundeventProperty.Value?.GetType()} wants to display as {soundeventProperty.DisAs}");
                     switch (soundeventProperty.DisAs)
                     {
                         case EventDisplays.FloatValue:
@@ -396,7 +400,7 @@ namespace AAT.Pages
                     return Template;
                 }
             }
-            return base.SelectTemplate(item, container);
+            return ((FrameworkElement)container).FindResource("TextTemplate") as DataTemplate;
         }
 
         private void SoundeventProperty_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -73,7 +73,7 @@ namespace AAT
             }
             App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             _ = Soundevents.SoundeventBuilder.Instance;
-            CloseCaptions.CloseCaptionManager.LoadCaptions(true);
+            
         }
 
         

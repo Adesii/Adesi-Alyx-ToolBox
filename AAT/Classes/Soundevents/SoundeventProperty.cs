@@ -44,11 +44,6 @@ namespace AAT.Soundevents
 
         private void SoundeventProperty_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-
-            var cp = (ContentPresenter)ValueContainer;
-            var cts = cp.ContentTemplateSelector;
-            cp.ContentTemplateSelector = null;
-            cp.ContentTemplateSelector = cts;
         }
 
         public SoundeventProperty(PropertyNames PropertyName, Type property)

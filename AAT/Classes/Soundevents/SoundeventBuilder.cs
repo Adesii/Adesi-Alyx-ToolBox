@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HLACaptionReplacer;
 using AAT.CloseCaptions;
+using System.Collections.Concurrent;
 
 namespace AAT.Soundevents
 {
@@ -19,7 +20,7 @@ namespace AAT.Soundevents
         DUPLICATE,
         NOTFOUND,
         EMPTY,
-        CONNECTIONREFUSED
+        CONNECTION_REFUSED
     }
     public enum PropertyNames
     {
@@ -54,7 +55,7 @@ namespace AAT.Soundevents
 
 
         public static Dictionary<uint, Soundevent> SoundeventDictionary = new();
-        public static Dictionary<string, LanguageCaption> CaptionDictionary = new();
+        public static ConcurrentDictionary<string, LanguageCaption> CaptionDictionary = new();
 
 
         enum options
@@ -124,7 +125,7 @@ namespace AAT.Soundevents
             else
             {
                 se = new Soundevent(name, AddonManager.CurrentAddon);
-                se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.TypePicker, "hlvr_default_3d"));
+                se.AddProperty(new SoundeventProperty(PropertyNames.type.ToString(), EventDisplays.EventTypePicker, "hlvr_default_3d"));
                 se.AddProperty(new SoundeventProperty(PropertyNames.volume.ToString(), EventDisplays.FloatValue, "1"));
                 se.AddProperty(new SoundeventProperty(PropertyNames.vsnd_files.ToString(), EventDisplays.FilePicker));
             }

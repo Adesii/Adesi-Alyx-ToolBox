@@ -34,26 +34,27 @@ namespace AAT.CloseCaptions
         {
             get
             {
-                if (Soundevents.SoundeventBuilder.CaptionDictionary[CurrLang] != null)
+                if (Soundevents.SoundeventBuilder.CaptionDictionary.ContainsKey(CurrLang) && Soundevents.SoundeventBuilder.CaptionDictionary?[CurrLang] != null)
                     return Soundevents.SoundeventBuilder.CaptionDictionary[CurrLang];
                 else return null;
             }
         }
 
-        public static void LoadCaptions(bool reload = false)
+        public static Task LoadCaptions(bool reload = false)
         {
-            if (!reload) return;
+            if (!reload)
+                return Task.CompletedTask;
             Regex reger = new("(_)\\w+");
             Directory.GetFiles(Path.Combine(Addons.AddonFolderWatcher.GetInstallPath(), "game/hlvr/resource/subtitles")).AsParallel().ForAll((item) =>
             {
                LanguageCaption lc = new(reger.Match(item).Value[1..]);
                lc.captionFile = new ClosedCaptions();
                lc.captionFile.Read(File.OpenRead(item));
-                Soundevents.SoundeventBuilder.CaptionDictionary.Add(lc.language,lc);
+               Soundevents.SoundeventBuilder.CaptionDictionary.TryAdd(lc.language,lc);
                 //Debug.WriteLine(lc.language);
             });
-            Pages.CaptionEditor.Instance.SetSource();
+            Pages.CaptionEditor.Instance.Dispatcher.Invoke(()=> { Pages.CaptionEditor.Instance.SetSource(); });
+            return Task.CompletedTask;
         }
-
     }
 }

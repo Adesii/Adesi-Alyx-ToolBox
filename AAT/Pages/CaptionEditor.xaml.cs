@@ -22,6 +22,7 @@ using HLACaptionReplacer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Converters;
+using System.Threading.Tasks;
 
 namespace AAT.Pages
 {
@@ -59,14 +60,19 @@ namespace AAT.Pages
         private void CaptionEditor_Loaded(object sender, RoutedEventArgs e)
         {
             AddonManager.AddonChanged += addonChanged;
-            CloseCaptionManager.LoadCaptions();
+            if (CloseCaptionManager.LanguageSpecificCaptions == null)
+                Task.Run(() =>
+                {
+                    CloseCaptionManager.LoadCaptions(true);
+                });
+                
             MainWindow.ChangeTheme(Instance);
             CurrentlyViewable = true;
 
             //List<string> compiled = new();
             //ITraceWriter traceWriter = new MemoryTraceWriter();
 
-            
+
             //Debug.WriteLine(traceWriter.ToString());
             //System.IO.File.WriteAllTextAsync("C:/Users/kopie/Desktop/New folder/allCaption.Json", JsonConvert.SerializeObject(SoundeventBuilder.CaptionDictionary, new JsonSerializerSettings
             //{

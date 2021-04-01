@@ -34,6 +34,7 @@ namespace AAT.Soundevents
             {
                 if (string.IsNullOrWhiteSpace(meta))
                 {
+                    if (GetProperty("metadata")?.Value is not ValveResourceFormat.Serialization.KeyValues.KVObject) return "";
                     var b = (ValveResourceFormat.Serialization.KeyValues.KVObject)(GetProperty("metadata")?.Value);
                     meta = b == null ? "" : b.Properties["1"].Value.ToString();
                 }
