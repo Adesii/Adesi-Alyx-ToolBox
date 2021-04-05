@@ -115,7 +115,7 @@ namespace AAT.Soundevents
                 case KVType.ARRAY:
                 case KVType.ARRAY_TYPED:
                     this.disAs = EventDisplays.ArrayValue;
-                    return typeof(KVValue);
+                    return typeof(KVObject);
                 case KVType.BOOLEAN_TRUE:
                 case KVType.BOOLEAN_FALSE:
                     return typeof(bool);

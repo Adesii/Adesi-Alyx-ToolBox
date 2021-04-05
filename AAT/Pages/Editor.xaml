@@ -126,27 +126,10 @@
                 Text="{Binding Value.Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
         <DataTemplate x:Key="ArrayTemplate">
-            <ScrollViewer
-                MaxHeight="200"
-                Padding="10,0,0,0"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch">
-                <StackPanel>
-                    <DataGrid
-                        AutoGenerateColumns="False"
-                        IsSynchronizedWithCurrentItem="True"
-                        ItemsSource="{Binding Value.Value.Properties}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn
-                                Width="*"
-                                CellTemplateSelector="{StaticResource BasedOnValue}"
-                                Header="Value" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <Button Click="Button_Click_1" Content="{IconPack:BootstrapIcons Kind=X}" />
-                </StackPanel>
-
-            </ScrollViewer>
+            <Button
+                x:Name="ArrayEditorOpener"
+                Click="ArrayEditorOpener_Click"
+                Content="Open Array Editor" />
 
         </DataTemplate>
         <DataTemplate x:Key="FilePicker">

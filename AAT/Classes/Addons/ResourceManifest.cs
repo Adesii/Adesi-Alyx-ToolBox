@@ -21,6 +21,14 @@ namespace AAT.Addons
         public ResourceManifest(Addon owner)
         {
             ownAddon = owner;
+            TryGetResourceManifest();
+        }
+
+        public void TryGetResourceManifest()
+        {
+            var p = Path.Combine(ownAddon.Path, "resourcemanifests");
+
+
         }
         public void SaveFile()
         {

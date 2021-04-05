@@ -1,8 +1,9 @@
 ﻿using AAT.Soundevents;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using ValveKeyValue;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Addons
 {
@@ -246,12 +247,14 @@ namespace AAT.Addons
                     //TODO: The following lines will need change depending on how arrays are handled.
                     if (property.DisAs == EventDisplays.ArrayValue)
                     {
+                        var w = new ValveResourceFormat.IndentedTextWriter();
+                        var kvO = property.Value as KVValue;
+                        if (kvO.Value is not KVObject kv) continue;
+                        w.NewLine = "\n\t\t";
+                        kv.Serialize(w);
+                        //sb.Append("\t\t");
+                        sb.Append(w.ToString());
                         sb.AppendLine();
-                        sb.AppendLine("\t\t[");
-                        sb.Append("\t\t\t\"");
-                        sb.Append(property.Value);
-                        sb.AppendLine("\"");
-                        sb.AppendLine("\t\t]");
                     }
                     else
                     {
@@ -280,7 +283,7 @@ namespace AAT.Addons
                                 sb.Append(property.Value.ToString().Trim('\"'));
                                 sb.Append('"');
                                 break;
-                            
+
                             case EventDisplays.StringValue:
                             default:
                                 sb.Append(property.Value.ToString().Trim('\"'));

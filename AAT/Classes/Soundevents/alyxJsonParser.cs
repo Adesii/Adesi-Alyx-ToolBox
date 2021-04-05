@@ -60,7 +60,7 @@ namespace AAT.Soundevents
                                     propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
                                     break;
                                 case "vsnd_files":
-                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.FilePicker, inobb.Value.ToString()));
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.FilePicker, inobb.Value));
                                     break;
                                 case "type":
                                     if (!AllEventTypes.Contains(inobb.Value.Value.ToString()))

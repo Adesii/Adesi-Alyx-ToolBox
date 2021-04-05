@@ -16,6 +16,7 @@ using System.Globalization;
 using static AAT.Soundevents.SoundeventsPropertyDefinitions;
 using System.Collections;
 using ValveResourceFormat.Serialization.KeyValues;
+using AAT.Windows;
 
 namespace AAT.Pages
 {
@@ -49,7 +50,8 @@ namespace AAT.Pages
 
         public IEnumerable Stuff => ComboBoxAddItem.ItemsSource;
 
-
+        public ArrayEditor arrayEditing;
+        private bool CurrentlyViewable = false;
         public Editor()
         {
             InitializeComponent();
@@ -77,6 +79,7 @@ namespace AAT.Pages
             MainWindow.ChangeTheme(Instance);
 
             addonChanged();
+            CurrentlyViewable = true;
         }
         private void Editor_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -322,6 +325,28 @@ namespace AAT.Pages
         {
             //AddonManager.CurrentAddon.ApplyChanges();
             VConsole.SendCommand("snd_sos_start_soundevent " + ((Soundevent)SoundeventName?.SelectedItem)?.EventName);
+        }
+
+        private void ArrayEditorOpener_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CurrentlyViewable) return;
+            arrayEditing = ArrayEditor.Instance;
+            arrayEditing.Owner = MainWindow.Instance;
+            Debug.WriteLine(sender.GetType());
+            if (sender.GetType() == typeof(DataGrid))
+            {
+                var grid = sender as Button;
+                var row = grid.TryFindParent<DataGridRow>();
+                if (row.Item != null)
+                {
+                    ArrayEditor.Instance.CurrentArrayProperty = row.Item as SoundeventProperty;
+                }
+            }
+            if (arrayEditing != null)
+            {
+                arrayEditing.Show();
+                arrayEditing.Focus();
+            }
         }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector

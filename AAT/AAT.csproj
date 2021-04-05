@@ -28,7 +28,6 @@
 	<PackageReference Include="System.Memory">
       <Version>4.5.4</Version>
     </PackageReference>
-	<PackageReference Include="ValveKeyValue" Version="0.5.0.4" />
 	<PackageReference Include="ValvePak" Version="1.0.2.35" />
 	<PackageReference Include="ValveResourceFormat" Version="0.1.6.515" />
   </ItemGroup>
