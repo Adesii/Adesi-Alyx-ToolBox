@@ -251,7 +251,7 @@ namespace AAT.Addons
                         var kvO = property.Value as List<AKV.AKValue>;
                         w.NewLine = "\n\t\t";
                         AKV.AKValue.SerializeArray(w, kvO);
-                        sb.Append(w.ToString());
+                        sb.Append(w.ToString()+"\n");
 
                     }
                     else
