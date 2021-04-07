@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 using System.Linq;
 using System.Diagnostics;
 using Newtonsoft.Json;

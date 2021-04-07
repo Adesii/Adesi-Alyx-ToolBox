@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 using AAT.CloseCaptions;
 using ValveResourceFormat.Serialization.KeyValues;
 

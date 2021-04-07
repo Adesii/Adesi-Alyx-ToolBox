@@ -33,10 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="HLACaptionReplacerLibrary">
-      <HintPath>dll\HLACaptionReplacerLibrary.dll</HintPath>
-      <Private>true</Private>
-      <EmbedInteropTypes>false</EmbedInteropTypes>
+    <Reference Include="HLACaptionCompilerLibrary">
+      <HintPath>dll\HLACaptionCompilerLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 

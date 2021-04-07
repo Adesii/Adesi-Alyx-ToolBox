@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 using AAT.Addons;
 using AAT.Soundevents;
 using System.ComponentModel;

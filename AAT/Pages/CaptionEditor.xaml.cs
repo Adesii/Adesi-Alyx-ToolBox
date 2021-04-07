@@ -17,7 +17,7 @@ using AAT.Windows;
 using AAT.Soundevents;
 using System.Linq;
 using System.Diagnostics;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

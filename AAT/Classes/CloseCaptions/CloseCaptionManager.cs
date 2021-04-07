@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.IO;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;

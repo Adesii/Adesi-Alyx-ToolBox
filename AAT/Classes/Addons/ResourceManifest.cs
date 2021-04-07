@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AAT.Soundevents;
 using System.IO;
-using HLACaptionReplacer;
+using HLACaptionCompiler;
 using AAT.CloseCaptions;
 namespace AAT.Addons
 {
