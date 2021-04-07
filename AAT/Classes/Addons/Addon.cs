@@ -15,7 +15,7 @@ namespace AAT.Addons
 
         public bool OnlySoundeventsFolder;
 
-        public string Path = "/";
+        public string Path = "\\";
         private bool refreshList = false;
 
         public ResourceManifest Manifest;
@@ -88,7 +88,7 @@ namespace AAT.Addons
         {
             AddonName = path[(path.LastIndexOf("\\") + 1)..];
             OnlySoundeventsFolder = onlySoundeventsFolder;
-            Path = path;
+            Path = path.Replace("/", "\\");
             Manifest = TryGetManifestorCreate();
         }
 

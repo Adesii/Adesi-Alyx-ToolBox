@@ -133,7 +133,12 @@
 
         </DataTemplate>
         <DataTemplate x:Key="FilePicker">
-            <ScrollViewer />
+            <ScrollViewer>
+                <StackPanel Orientation="Horizontal">
+                    <TreeView ItemsSource="{Binding Value}" />
+                    <Button Click="Button_Click_3" Content="Open Picker" />
+                </StackPanel>
+            </ScrollViewer>
         </DataTemplate>
     </Page.Resources>
     <Grid>

@@ -17,6 +17,8 @@ using static AAT.Soundevents.SoundeventsPropertyDefinitions;
 using System.Collections;
 using ValveResourceFormat.Serialization.KeyValues;
 using AAT.Windows;
+using Microsoft.Win32;
+using System.IO;
 
 namespace AAT.Pages
 {
@@ -349,6 +351,29 @@ namespace AAT.Pages
                 arrayEditing.Focus();
             }
         }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button b)
+            {
+                var k = b.TryFindParent<DataGridRow>().Item as SoundeventProperty;
+                OpenFileDialog openFileDialog = new() {
+                Multiselect = true,
+                
+                };
+                
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    List<string> lw = new();
+                    for (int i = 0; i < openFileDialog.FileNames.Length; i++)
+                    {
+                        lw.Add(Path.ChangeExtension(openFileDialog.FileNames[i], "vsnd").Remove(0,AddonManager.CurrentAddon.Path.Length+1));
+                    }
+                    k.Value = lw;
+                }
+                    
+            }
+        }
     }
     public class DataTemplateBasedOnValue : DataTemplateSelector
     {
@@ -413,7 +438,7 @@ namespace AAT.Pages
                             Template = element.FindResource("TextTemplate") as DataTemplate;
                             break;
                         case EventDisplays.FilePicker:
-                            Template = element.FindResource("TextTemplate") as DataTemplate;
+                            Template = element.FindResource("FilePicker") as DataTemplate;
                             break;
                         case EventDisplays.EventTypePicker:
                             Template = element.FindResource("EventTypePicker") as DataTemplate;
