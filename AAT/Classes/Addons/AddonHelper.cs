@@ -272,7 +272,6 @@ namespace AAT.Addons
                                     sb.Append(property.Value);
                                 }
                                 break;
-                            case EventDisplays.SoundeventPicker:
                             case EventDisplays.FilePicker:
                                 var w = new ValveResourceFormat.IndentedTextWriter();
                                 w.NewLine = "\n\t\t";
@@ -280,12 +279,13 @@ namespace AAT.Addons
                                 sb.Append("\n\t\t[\n\t\t\t");
                                 foreach (var item in property.Value as List<string>)
                                 {
-                                    w.WriteLine("\""+item+"\",");
+                                    w.WriteLine("\"" + item + "\",");
                                 }
                                 sb.Append(w.ToString());
                                 sb.Append("]");
 
                                 break;
+                            case EventDisplays.SoundeventPicker:
                             case EventDisplays.ArrayValue:
                             case EventDisplays.EventTypePicker:
                             case EventDisplays.TypePicker:

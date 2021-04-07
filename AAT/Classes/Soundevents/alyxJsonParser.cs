@@ -57,7 +57,7 @@ namespace AAT.Soundevents
                             switch (inobb.Key)
                             {
                                 case "base":
-                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.ToString()));
+                                    propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.SoundeventPicker, inobb.Value.Value.ToString()));
                                     break;
                                 case "vsnd_files":
                                     propss.Add(new SoundeventProperty(inobb.Key, EventDisplays.FilePicker, inobb.Value));

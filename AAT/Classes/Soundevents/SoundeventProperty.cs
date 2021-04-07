@@ -149,6 +149,10 @@ namespace AAT.Soundevents
         {
             switch (typeName)
             {
+                case "soundevent_01":
+                case "soundevent_02":
+                case "soundevent_03":
+                case "soundevent_04":
                 case "base":
                     this.disAs = EventDisplays.SoundeventPicker;
                     break;
