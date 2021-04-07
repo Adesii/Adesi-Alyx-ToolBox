@@ -1,15 +1,17 @@
 ﻿<mah:MetroWindow
     x:Class="AAT.Windows.ArrayEditor"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:IconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:AAT"
+    xmlns:local="clr-namespace:AAT.Windows"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mw="clr-namespace:AAT.Pages"
     xmlns:wpf="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
-    Title="Cheatsheet"
+    Name="page"
+    Title="Array Editor"
     Width="1595"
     Height="800"
     Background="{DynamicResource MahApps.Brushes.MenuItem.Background}"
@@ -17,7 +19,75 @@
     Foreground="{DynamicResource MahApps.Brushes.Flyout.Foreground}"
     GlowBrush="{DynamicResource MahApps.Brushes.MenuItem.Background}"
     mc:Ignorable="d">
-    <Grid>
-        
+    <mah:MetroWindow.Resources>
+        <local:KVObjectBasedOnValue x:Key="kvo" />
+        <mw:DataTemplateBasedOnValue x:Key="BasedOnValue" />
+        <DataTemplate x:Key="ArrayTemplate">
+            <Expander>
+                <StackPanel>
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Value}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="*" CellTemplateSelector="{StaticResource BasedOnValue}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Width="100" Content="Delete" />
+                </StackPanel>
+            </Expander>
+        </DataTemplate>
+
+
+        <DataTemplate x:Key="FloatTemplate">
+            <mah:NumericUpDown
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Interval="0.1"
+                NumericInputMode="All"
+                StringFormat="f3"
+                TextAlignment="Center"
+                Value="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+        <DataTemplate x:Key="TextTemplate">
+            <TextBox
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Text="{Binding Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="FloatArrayTemplate">
+            <mah:NumericUpDown
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Interval="0.1"
+                NumericInputMode="All"
+                StringFormat="f3"
+                TextAlignment="Center"
+                Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+        <DataTemplate x:Key="TextArrayTemplate">
+            <TextBox
+                Width="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+        <DataTemplate x:Key="FilePicker">
+            <ScrollViewer />
+        </DataTemplate>
+    </mah:MetroWindow.Resources>
+    <Grid x:Name="MainGrid">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding KVCollection, ElementName=page}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*" CellTemplateSelector="{StaticResource kvo}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </mah:MetroWindow>

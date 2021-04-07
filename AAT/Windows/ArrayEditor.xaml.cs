@@ -15,6 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AAT.Soundevents;
+using System.Collections.ObjectModel;
+using ValveResourceFormat.Serialization.KeyValues;
+using System.Globalization;
 
 namespace AAT.Windows
 {
@@ -27,7 +30,30 @@ namespace AAT.Windows
         private static ArrayEditor m_instance;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public SoundeventProperty CurrentArrayProperty;
+
+        private SoundeventProperty _currentArrayProperty;
+        public SoundeventProperty CurrentArrayProperty
+        {
+            get
+            {
+                return _currentArrayProperty;
+            }
+            set
+            {
+                _currentArrayProperty = value;
+                NotifyPropertyChanged(nameof(CurrentArrayProperty));
+            }
+        }
+
+        private ObservableCollection<AKV.AKValue> kVValues;
+        public ObservableCollection<AKV.AKValue> KVCollection
+        {
+            get
+            {
+                if (kVValues == null) kVValues = new();
+                return kVValues;
+            }
+        }
 
         public static ArrayEditor Instance
         {
@@ -39,14 +65,27 @@ namespace AAT.Windows
         }
         public ArrayEditor()
         {
+            PropertyChanged += CurrentProperty_PropertyChanged;
             InitializeComponent();
             Loaded += CaptionTypeEditor_Loaded;
             Closed += MetroWindow_Closed;
         }
 
+        private void CurrentProperty_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"Property Changed");
+            KVCollection.Clear();
+            if (CurrentArrayProperty.Value is List<AKV.AKValue> kc)
+                foreach (var item in kc)
+                {
+                    KVCollection.Add(item);
+                }
+        }
+
         private void CaptionTypeEditor_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindow.ChangeTheme(Instance);
+
             ThemeManager.Current.ThemeChanged += Current_ThemeChanged;
         }
         private void Current_ThemeChanged(object sender, ThemeChangedEventArgs e)
@@ -58,5 +97,27 @@ namespace AAT.Windows
         {
             m_instance = null;
         }
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
+
+    public class KVObjectBasedOnValue : DataTemplateSelector
+    {
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            if (container is FrameworkElement element && item != null)
+            {
+                System.Diagnostics.Debug.WriteLine(item.GetType());
+                if (item is AKV.AKValue)
+                {
+                    return element.FindResource("ArrayTemplate") as DataTemplate;
+                }
+            }
+            return base.SelectTemplate(item, container);
+        }
+
+    }
+
 }

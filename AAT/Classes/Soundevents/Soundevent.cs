@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HLACaptionReplacer;
 using AAT.CloseCaptions;
+using ValveResourceFormat.Serialization.KeyValues;
 
 namespace AAT.Soundevents
 {
@@ -50,7 +51,9 @@ namespace AAT.Soundevents
                 var t = GetProperty("line_text");
                 if (t != null)
                 {
-                    return t.Value.ToString();
+                    if (t.Value is KVValue kv)
+                        return kv.Value.ToString();
+                    else return t.Value.ToString();
                 }
                 else
                     return "";

@@ -248,13 +248,11 @@ namespace AAT.Addons
                     if (property.DisAs == EventDisplays.ArrayValue)
                     {
                         var w = new ValveResourceFormat.IndentedTextWriter();
-                        var kvO = property.Value as KVValue;
-                        if (kvO.Value is not KVObject kv) continue;
+                        var kvO = property.Value as List<AKV.AKValue>;
                         w.NewLine = "\n\t\t";
-                        kv.Serialize(w);
-                        //sb.Append("\t\t");
+                        AKV.AKValue.SerializeArray(w, kvO);
                         sb.Append(w.ToString());
-                        sb.AppendLine();
+
                     }
                     else
                     {
@@ -306,5 +304,6 @@ namespace AAT.Addons
             sb.Append("}");
             return sb.ToString();
         }
+
     }
 }

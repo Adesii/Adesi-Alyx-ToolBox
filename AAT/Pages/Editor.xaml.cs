@@ -333,12 +333,13 @@ namespace AAT.Pages
             arrayEditing = ArrayEditor.Instance;
             arrayEditing.Owner = MainWindow.Instance;
             Debug.WriteLine(sender.GetType());
-            if (sender.GetType() == typeof(DataGrid))
+            if (sender is Button grid)
             {
-                var grid = sender as Button;
+                Debug.WriteLine("Sender isnt null");
                 var row = grid.TryFindParent<DataGridRow>();
                 if (row.Item != null)
                 {
+                    Debug.WriteLine(row.Item.GetType());
                     ArrayEditor.Instance.CurrentArrayProperty = row.Item as SoundeventProperty;
                 }
             }
@@ -359,10 +360,9 @@ namespace AAT.Pages
             if (container is FrameworkElement element && item != null)
             {
                 Debug.WriteLine(item.GetType()+"inside something");
-                if (item is KeyValuePair<string, KVValue>)
+                if (item is AKV.AKValue i)
                 {
-                    var i = ((KeyValuePair<string, KVValue>)item).Value;
-                    Debug.WriteLine(((KeyValuePair<string, KVValue>)item).Key);
+                    Debug.WriteLine(i);
 
                     DataTemplate Template;
                     switch (GetTypeByEnum(i.Type))

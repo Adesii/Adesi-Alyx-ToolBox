@@ -176,10 +176,43 @@ namespace AAT.Soundevents
             return t;
         }
         public string TypeName { get => typeName; set { typeName = value; NotifyPropertyChanged(nameof(TypeName)); } }
-        public object Value { get => value; set { this.value = value; NotifyPropertyChanged(nameof(Value)); } }
+        public object Value
+        {
+            get => value;
+            set
+            {
+                if (value is KVValue kvva)
+                    if (kvva.Value is KVObject kvo)
+                        this.value = createArrayFromKVO(kvo);
+                    else
+                        this.value = value;
+                else
+                    this.value = value;
+                NotifyPropertyChanged(nameof(Value));
+            }
+        }
         public Type Type { get => type; set { type = value; NotifyPropertyChanged(nameof(Type)); } }
         public EventDisplays DisAs { get => disAs; set { disAs = value; NotifyPropertyChanged(nameof(DisAs)); } }
 
+
+        public List<AKV.AKValue> createArrayFromKVO(KVObject kvo)
+        {
+            List<AKV.AKValue> kl = new();
+
+            foreach (var item in kvo.Properties)
+            {
+                AKV.AKValue kvv;
+                if (item.Value.Value is KVObject kc)
+                    kvv = new(KVType.ARRAY, createArrayFromKVO(kc));
+                else
+                {
+                    kvv = new AKV.AKValue(item.Value.Type, item.Value.Value);
+                }
+                kl.Add(kvv);
+
+            }
+            return kl;
+        }
         public static bool IsNumeric(Type type)
         {
             if (type == null) { return false; }
