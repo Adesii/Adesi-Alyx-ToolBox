@@ -39,8 +39,7 @@
             CanUserSortColumns="True"
             GridLinesVisibility="Horizontal"
             IsSynchronizedWithCurrentItem="True"
-            SelectedIndex="0"
-            SelectionChanged="Button_Click_1"
+            MouseRightButtonUp="CaptionEditorView_MouseDown"
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTemplateColumn

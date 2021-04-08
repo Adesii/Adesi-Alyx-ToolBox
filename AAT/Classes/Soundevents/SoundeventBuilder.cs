@@ -82,6 +82,7 @@ namespace AAT.Soundevents
                 AllBaseSoundEvents.Add(item);
                 SoundeventDictionary[item.Hash] = item;
             }
+            await CloseCaptions.CloseCaptionManager.LoadCaptions();
         }
         public void SwitchOnlyAddons(bool state)
         {

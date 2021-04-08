@@ -27,7 +27,7 @@ namespace AAT.Soundevents
 
         public static Task GetAlyxSoundeventFromGame()
         {
-            return Task.Run(() =>
+            var b = Task.Run(() =>
             {
 
 
@@ -91,6 +91,9 @@ namespace AAT.Soundevents
                 allsoundeventsfromGame = soundevents;
                 Debug.WriteLine("finished loading all sounds");
             });
+            
+            return b;
+
         }
         public static Stream GenerateStreamFromString(string s)
         {

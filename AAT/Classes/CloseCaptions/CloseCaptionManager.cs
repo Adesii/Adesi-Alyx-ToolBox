@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using System.Linq;
+using System.Threading;
 
 namespace AAT.CloseCaptions
 {
@@ -40,10 +41,8 @@ namespace AAT.CloseCaptions
             }
         }
 
-        public static Task LoadCaptions(bool reload = false)
+        public static Task LoadCaptions()
         {
-            if (!reload)
-                return Task.CompletedTask;
             Regex reger = new("(_)\\w+");
             Directory.GetFiles(Path.Combine(Addons.AddonFolderWatcher.GetInstallPath(), "game/hlvr/resource/subtitles")).AsParallel().ForAll((item) =>
             {

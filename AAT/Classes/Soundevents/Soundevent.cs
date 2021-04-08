@@ -28,16 +28,16 @@ namespace AAT.Soundevents
         private string m_eventName;
         public string EventName { get => m_eventName; set => m_eventName = value; }
 
-        private string meta = "";
+        private string meta;
         public string GetMeta
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(meta))
                 {
-                    if (GetProperty("metadata")?.Value is not ValveResourceFormat.Serialization.KeyValues.KVObject) return "";
-                    var b = (ValveResourceFormat.Serialization.KeyValues.KVObject)(GetProperty("metadata")?.Value);
-                    meta = b == null ? "" : b.Properties["1"].Value.ToString();
+                    if (GetProperty("metadata")?.Value is not ValveResourceFormat.Serialization.KeyValues.KVValue b) return "";
+                    if (b.Value is not KVObject kb) return "";
+                    meta = kb == null ? "" : kb.Properties["1"].Value.ToString();
                 }
                 return meta ?? "";
             }

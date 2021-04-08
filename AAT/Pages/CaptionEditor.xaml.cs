@@ -60,11 +60,6 @@ namespace AAT.Pages
         private void CaptionEditor_Loaded(object sender, RoutedEventArgs e)
         {
             AddonManager.AddonChanged += addonChanged;
-            if (CloseCaptionManager.LanguageSpecificCaptions == null)
-                Task.Run(() =>
-                {
-                    CloseCaptionManager.LoadCaptions(true);
-                });
                 
             MainWindow.ChangeTheme(Instance);
             CurrentlyViewable = true;
@@ -125,6 +120,31 @@ namespace AAT.Pages
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (!CurrentlyViewable) return;
+            captionEditing = Windows.CaptionTypeEditor.Instance;
+            captionEditing.Owner = MainWindow.Instance;
+            Debug.WriteLine(sender.GetType());
+            if (sender.GetType() == typeof(DataGrid))
+            {
+                var grid = sender as DataGrid;
+                if (grid.SelectedItem == null)
+                {
+                    return;
+                }
+                else
+                {
+                    CaptionTypeEditor.Instance.CurrentCaption = grid.SelectedItem as ClosedCaptionWrapperClass;
+                }
+            }
+            if (captionEditing != null)
+            {
+                captionEditing.Show();
+                captionEditing.Focus();
+            }
+        }
+
+        private void CaptionEditorView_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!CurrentlyViewable) return;
             captionEditing = Windows.CaptionTypeEditor.Instance;
