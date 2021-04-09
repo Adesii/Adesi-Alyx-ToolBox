@@ -1,4 +1,5 @@
-﻿using AAT.Soundevents;
+﻿using AAT.AKV;
+using AAT.Soundevents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,6 +61,7 @@ namespace AAT.Addons
             for (int i = 2; i < AllLines.Length; i++)  //This expects line 1 to be the header (SoundEventHeader defined above), while line 2 is the opening brace ("{").  If it could be different additional logic is needed.
             {
                 string line = AllLines[i];
+                if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!propertyOpen && line.StartsWith("}"))
                 {
                     break;
@@ -67,6 +69,7 @@ namespace AAT.Addons
                 else
                 {
                     int j = -1;
+                    //System.Diagnostics.Debug.WriteLine(line[++j]);
                     while (line[++j] == '\t' || line[j] == ' ') { }
 
                     if (line[j] == '{')
@@ -77,7 +80,16 @@ namespace AAT.Addons
                     else if (line[j] == '}')
                     {
                         propertyOpen = false;
-
+                        for (int i1 = 0; i1 < Lines.Count; i1++)
+                        {
+                            string item = Lines[i1];
+                            if (item.Contains("=[") || item.Contains("= ["))
+                            {
+                                Lines[i1]=Lines[i1].Replace('[',' ');
+                                Lines.Insert(i1+1, "[");
+                                i1++;
+                            }
+                        }
                         var property = CreateSoundevent(Lines.ToArray());
                         events.Add(property);
                         Lines.Clear();
@@ -104,7 +116,7 @@ namespace AAT.Addons
 
             string eventName = null;
             Soundevent currentEvent = null;
-            List<SoundeventProperty> properties = new List<SoundeventProperty>();
+            List<SoundeventProperty> properties = new();
             foreach (var rawline in lines)
             {
                 string line;
@@ -121,7 +133,7 @@ namespace AAT.Addons
                     {
                         //strip out comments;
                         line = rawline.Substring(0, i);
-                        comment = rawline.Substring(i);
+                        comment = rawline[i..];
                     }
                 }
                 else
@@ -139,11 +151,12 @@ namespace AAT.Addons
                     }
 
                 }
-
+                //System.Diagnostics.Debug.WriteLine(line);
                 if (line.StartsWith("{"))
                 {
                     if (string.IsNullOrEmpty(eventName))
                     {
+                        //continue;
                         throw new InvalidFileFormatException("Event name for a list of sound event properties was not found.");
                     }
                     propertyOpen = true;
@@ -152,6 +165,7 @@ namespace AAT.Addons
                 {
                     propertyOpen = false;
                     break;
+
                 }
                 else if (propertyOpen)
                 {
@@ -167,9 +181,18 @@ namespace AAT.Addons
                         }
 
                         //TODO: The following line will need change depending on how arrays are handled.
-                        SoundeventProperty bproperty = new SoundeventProperty(valueName, EventDisplays.ArrayValue, string.Join(',', values.ToArray()));
+
+                        List<AKValue> ak = new();
+                        for (int i1 = 0; i1 < values.Count; i1++)
+                        {
+                            System.Diagnostics.Debug.WriteLine(values[i1]);
+                            ak.Add(new AKValue(KVType.STRING,values[i1]));
+                        }
+                        System.Diagnostics.Debug.WriteLine(ak.Count);
+                        SoundeventProperty bproperty = new(valueName, EventDisplays.ArrayValue, ak);
                         properties.Add(bproperty);
                         valueOpen = false;
+                        values.Clear();
                     }
                     else if (valueOpen)
                     {
@@ -199,7 +222,7 @@ namespace AAT.Addons
                                 {
                                     if (valueValue.StartsWith("\"") && valueValue.EndsWith("\""))
                                     {
-                                        valueValue = valueValue.Substring(1, valueValue.Length - 2);
+                                        valueValue = valueValue[1..^1].Replace("\n",string.Empty);
                                     }
                                     var aproperty = new SoundeventProperty(valueName, valueValue);
                                     properties.Add(aproperty);
@@ -208,7 +231,7 @@ namespace AAT.Addons
                         }
                         else
                         {
-                            throw new InvalidFileFormatException("File format is invalid.");
+                           throw new InvalidFileFormatException("File format is invalid. Current Line: "+ line);
                         }
                     }
                 }
@@ -227,15 +250,12 @@ namespace AAT.Addons
         }
         public static string Serialize(IEnumerable<Soundevent> soundevents)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine(SoundEventHeader);
             sb.AppendLine("{");
             foreach (var soundevent in soundevents)
             {
-                sb.Append("\t");
-
-                sb.Append(soundevent.EventName);
-                sb.AppendLine(" = ");
+                sb.AppendLine("\t"+soundevent.EventName+ " = ");
                 sb.AppendLine("\t{");
                 foreach (var property in soundevent.Properties)
                 {
@@ -245,27 +265,26 @@ namespace AAT.Addons
                     sb.Append(" = ");
 
                     //TODO: The following lines will need change depending on how arrays are handled.
-                    if (property.DisAs == EventDisplays.ArrayValue)
+                    if (property.DisAs == EventDisplays.ArrayValue || property.DisAs == EventDisplays.FilePicker)
                     {
                         var w = new ValveResourceFormat.IndentedTextWriter();
-                        var kvO = property.Value as List<AKV.AKValue>;
+                        var kvO = property.Value as List<AKValue>;
                         w.NewLine = "\n\t\t";
                         AKV.AKValue.SerializeArray(w, kvO);
                         sb.Append(w.ToString()+"\n");
-
                     }
                     else
                     {
                         if (property.DisAs == EventDisplays.StringValue)
                         {
-                            sb.AppendLine("\"");
+                            sb.Append("\"");
                         }
                         switch (property.DisAs)
                         {
                             case EventDisplays.FloatValue:
                                 if (property.Value != null)
                                 {
-                                    sb.Append((float.Parse(property.Value.ToString())).ToString("0.00##").Replace(",", "."));
+                                    sb.Append(float.Parse(property.Value.ToString()).ToString("0.00##").Replace(",", "."));
                                 }
                                 else
                                 {
@@ -277,29 +296,29 @@ namespace AAT.Addons
                                 w.NewLine = "\n\t\t";
                                 w.Indent++;
                                 sb.Append("\n\t\t[\n\t\t\t");
-                                foreach (var item in property.Value as List<string>)
-                                {
-                                    w.WriteLine("\"" + item + "\",");
-                                }
+                                if (property.Value as List<AKV.AKValue> != null)
+                                    foreach (var item in property.Value as List<AKV.AKValue>)
+                                    {
+                                        w.WriteLine(item.Value.ToString());
+                                    }
+                                else System.Diagnostics.Debug.WriteLine(property.Value);
                                 sb.Append(w.ToString());
                                 sb.Append("]");
-
                                 break;
                             case EventDisplays.SoundeventPicker:
                             case EventDisplays.ArrayValue:
                             case EventDisplays.EventTypePicker:
                             case EventDisplays.TypePicker:
-                                sb.Append('"');
-                                sb.Append(property.Value.ToString().Trim('\"'));
-                                sb.Append('"');
+                                sb.Append('"'+property.Value.ToString().Trim('\"')+ '"');
                                 break;
-
                             case EventDisplays.StringValue:
+                                sb.Append(property.Value.ToString().Trim('\"'));
+                                break;
                             default:
                                 sb.Append(property.Value.ToString().Trim('\"'));
                                 break;
                         }
-                        System.Diagnostics.Debug.WriteLine(property.DisAs + "   " + property.TypeName);
+                        System.Diagnostics.Debug.WriteLine("property: "+property.Value.ToString()+"   "+property.DisAs + "   " + property.TypeName);
                         if (property.DisAs == EventDisplays.StringValue)
                         {
                             sb.AppendLine("\"");

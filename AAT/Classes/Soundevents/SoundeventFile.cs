@@ -11,9 +11,14 @@ namespace AAT.Soundevents
         public string FileName = "base";
         public ObservableCollection<Soundevent> Soundevents = new ();
 
-        public SoundeventFile(string FileName= "base")
+        public SoundeventFile(string FileName= "base",string Path = null)
         {
             this.FileName = FileName;
+            if (Path != null)
+                foreach (var item in Addons.AddonHelper.Deserialize(File.ReadAllText(Path,Encoding.UTF8)))
+                {
+                    Soundevents.Add(item);
+                }
         }
         public void SaveFileToEventsFolder(string path)
         {

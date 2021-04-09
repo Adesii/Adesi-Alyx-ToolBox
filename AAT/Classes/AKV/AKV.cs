@@ -31,9 +31,7 @@ namespace AAT.AKV
                         SerializeArray(writer, k);
                     break;
                 case KVType.STRING:
-                    writer.Write("\"");
-                    writer.Write(EscapeUnescaped((string)Value, '"'));
-                    writer.Write("\"");
+                    writer.Write("\""+((string)Value)?.Trim('\n').Trim()+ "\"");
                     break;
                 case KVType.STRING_MULTI:
                     writer.Write("\"\"\"\n");
@@ -44,7 +42,7 @@ namespace AAT.AKV
                     writer.Write((bool)Value ? "true" : "false");
                     break;
                 case KVType.DOUBLE:
-                    writer.Write(((double)Value).ToString("#0.000000", CultureInfo.InvariantCulture));
+                    writer.Write(((float)Value).ToString("#0.000000", CultureInfo.InvariantCulture));
                     break;
                 case KVType.INT64:
                     writer.Write(Convert.ToInt64(Value));

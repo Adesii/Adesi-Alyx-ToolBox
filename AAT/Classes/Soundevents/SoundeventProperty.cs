@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using AAT.AKV;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,8 +67,11 @@ namespace AAT.Soundevents
         public SoundeventProperty(string typeName, object v)
         {
             this.typeName = typeName;
-            if (v is KVValue)
-                this.Type = GetTypeByEnum((v as KVValue).Type);
+            if (v is KVValue vks)
+                this.Type = GetTypeByEnum(vks.Type);
+            else if (v is AKValue vk)
+                this.Type = GetTypeByEnum(vk.Type);
+                
             else
                 this.disAs = getDisplayType(v);
             this.value = v;
@@ -87,8 +91,10 @@ namespace AAT.Soundevents
             this.typeName = typeName;
             this.disAs = t;
             this.value = v;
-            if (v is KVValue)
-                this.Type = GetTypeByEnum((v as KVValue).Type);
+            if (v is KVValue vks)
+                this.Type = GetTypeByEnum(vks.Type);
+            else if (v is AKValue vk)
+                this.Type = GetTypeByEnum(vk.Type);
             HardcodedTypes();
 
         }
@@ -110,6 +116,7 @@ namespace AAT.Soundevents
                 case KVType.STRING:
                 case KVType.STRING_MULTI:
                     this.disAs = EventDisplays.StringValue;
+                    
                     return typeof(string);
                 case KVType.BINARY_BLOB:
                 case KVType.ARRAY:
@@ -157,6 +164,7 @@ namespace AAT.Soundevents
                     this.disAs = EventDisplays.SoundeventPicker;
                     break;
                 case "vsnd_files":
+                    //System.Diagnostics.Debug.WriteLine(value.GetType());
                     this.disAs = EventDisplays.FilePicker;
                     break;
                 case "type":
@@ -168,10 +176,12 @@ namespace AAT.Soundevents
         {
             EventDisplays t = EventDisplays.StringValue;
             if (val == null) return t;
-            System.Diagnostics.Debug.WriteLine(val?.ToString() + " Something or else");
-            if (IsNumeric(val as Type))
+            //System.Diagnostics.Debug.WriteLine(val?.ToString() + " Something or else");
+            if (IsNumeric(val.GetType()) && float.TryParse(val.ToString(),out float b))
             {
                 t = EventDisplays.FloatValue;
+                if(b != null)
+                    value = b; 
             }
             if ((val as Type) == typeof(KVObject))
             {

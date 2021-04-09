@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HLACaptionCompiler;
 using AAT.CloseCaptions;
 using ValveResourceFormat.Serialization.KeyValues;
+using AAT.AKV;
 
 namespace AAT.Soundevents
 {
@@ -53,6 +54,8 @@ namespace AAT.Soundevents
                 {
                     if (t.Value is KVValue kv)
                         return kv.Value.ToString();
+                    else if (t.Value is AKValue kg)
+                        return kg.Value.ToString();
                     else return t.Value.ToString();
                 }
                 else

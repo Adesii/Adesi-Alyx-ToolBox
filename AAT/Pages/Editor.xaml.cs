@@ -364,10 +364,10 @@ namespace AAT.Pages
                 
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    List<string> lw = new();
+                    List<AKV.AKValue> lw = new();
                     for (int i = 0; i < openFileDialog.FileNames.Length; i++)
                     {
-                        lw.Add(Path.ChangeExtension(openFileDialog.FileNames[i], "vsnd").Remove(0,AddonManager.CurrentAddon.Path.Length+1));
+                        lw.Add(new(KVType.STRING_MULTI,Path.ChangeExtension(openFileDialog.FileNames[i], "vsnd").Remove(0,AddonManager.CurrentAddon.Path.Length+1)));
                     }
                     k.Value = lw;
                 }

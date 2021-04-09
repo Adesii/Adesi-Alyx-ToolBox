@@ -16,7 +16,7 @@ namespace AAT.Addons
         public bool OnlySoundeventsFolder;
 
         public string Path = "\\";
-        private bool refreshList = false;
+        private bool refreshList = true;
 
         public ResourceManifest Manifest;
 
@@ -36,6 +36,7 @@ namespace AAT.Addons
                             m_soundevents.Add(events);
                         }
                     }
+                    refreshList = false;
                 }
                 System.Diagnostics.Debug.Print($"Count of all Soundevents in addon:{AddonName} = {m_soundevents.Count}");
                 return m_soundevents;
