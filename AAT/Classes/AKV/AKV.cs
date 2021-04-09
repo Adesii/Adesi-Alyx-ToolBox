@@ -127,10 +127,8 @@ namespace AAT.AKV
             foreach (var item in k)
             {
                 item.PrintValue(writer);
-
                 writer.WriteLine(",");
             }
-
             writer.Indent--;
             writer.Write("]");
         }

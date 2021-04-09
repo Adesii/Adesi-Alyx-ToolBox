@@ -251,12 +251,12 @@ namespace AAT.Addons
         public static string Serialize(IEnumerable<Soundevent> soundevents)
         {
             StringBuilder sb = new();
-            sb.AppendLine(SoundEventHeader);
-            sb.AppendLine("{");
+            sb.Append(SoundEventHeader +"\r\n");
+            sb.Append("{" + "\r\n");
             foreach (var soundevent in soundevents)
             {
-                sb.AppendLine("\t"+soundevent.EventName+ " = ");
-                sb.AppendLine("\t{");
+                sb.Append("\t"+soundevent.EventName+ " = " + "\r\n");
+                sb.Append("\t{" + "\r\n");
                 foreach (var property in soundevent.Properties)
                 {
                     if (property.Value == null || string.IsNullOrWhiteSpace(property.Value.ToString())) continue;
@@ -269,9 +269,9 @@ namespace AAT.Addons
                     {
                         var w = new ValveResourceFormat.IndentedTextWriter();
                         var kvO = property.Value as List<AKValue>;
-                        w.NewLine = "\n\t\t";
+                        w.NewLine = "\r\n\t\t";
                         AKV.AKValue.SerializeArray(w, kvO);
-                        sb.Append(w.ToString()+"\n");
+                        sb.Append(w.ToString()+"\r\n");
                     }
                     else
                     {
@@ -321,16 +321,16 @@ namespace AAT.Addons
                         System.Diagnostics.Debug.WriteLine("property: "+property.Value.ToString()+"   "+property.DisAs + "   " + property.TypeName);
                         if (property.DisAs == EventDisplays.StringValue)
                         {
-                            sb.AppendLine("\"");
+                            sb.Append("\"" + "\r\n");
                         }
                         else
                         {
-                            sb.AppendLine();
+                            sb.Append("\r\n");
                         }
                     }
                 }
 
-                sb.AppendLine("\t}");
+                sb.Append("\t}" + "\r\n");
             }
             sb.Append("}");
             return sb.ToString();
